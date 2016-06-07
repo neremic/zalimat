@@ -19,18 +19,21 @@ export default {
     devServer: {
         contentBase: './src'
     },
+    resolve: {
+        extensions: ['', '.js', '.jsx']
+    },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin()
     ],
     module: {
         loaders: [
-            {test: /\.js$/, include: path.join(__dirname, 'src'), loaders: ['babel']},
+            {test: /\.js$|\.jsx$/, include: path.join(__dirname, 'src'), loaders: ['babel']},
             {test: /(\.css)$/, loaders: ['style', 'css']},
-            {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file'},
-            {test: /\.(woff|woff2)$/, loader: 'url?prefix=font/&limit=5000'},
-            {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream'},
-            {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml'}
+            { test: /\.less$/, loader: "style-loader!css-loader!less-loader" },
+            { test: /\.gif$/, loader: "url-loader?mimetype=image/png" },
+            {test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff'},
         ]
+
     }
 };
