@@ -1,7 +1,6 @@
 import React from 'react'
 import { AreaChart } from 'react-d3-components';
 import { Brush } from 'react-d3-components';
-import AutoWidth from '@zalando/react-automatic-width';
 
 class NewChart extends React.Component {
     constructor(props) {
