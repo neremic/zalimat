@@ -1,5 +1,5 @@
 import React from 'react'
-import Charts from './representational/Charts'
+import 'react-widgets/lib/less/react-widgets.less'
 import LifeCycleCharts from './application/life_cycle_charts/life_cycle_charts'
 
 class Root extends React.Component {

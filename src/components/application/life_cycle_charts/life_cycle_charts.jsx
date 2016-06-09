@@ -1,13 +1,13 @@
 import React from 'react'
-import VersionSelector from '../../representational/VersionSelector'
+import VersionSelector from '../../VersionSelector'
 import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import ChartWithHeader from '../../ChartWithHeader';
 import GlobalBrush from '../../GlobalBrush';
-import { Brush } from 'react-d3-components';
 import AutoWidth from '@zalando/react-automatic-width';
 import DateTime from 'react-datetime'
+import '../../../styles/react-datetime.css'
 
 class LifeCycleCharts extends React.Component {
     constructor(props) {
@@ -34,8 +34,6 @@ class LifeCycleCharts extends React.Component {
     }
 
     handleBrushChange(start, end) {
-        console.log("handleBrushChange %O", start);
-        console.log("handleBrushChange %O", end);
         this.setState({
             viewPortDateRange : {
                 startDate : start,
@@ -74,17 +72,10 @@ class LifeCycleCharts extends React.Component {
     }
 
     handleRemoveVersion(_versionToBeRemoved) {
-        console.log("1 handleRemoveVersion %O", _versionToBeRemoved);
-        console.log("2 handleRemoveVersion %O", this.state.selectedVerions);
         let newValues = this.state.selectedVerions.filter((v) => {
-            console.log("filter %O", v);
-            console.log("filter %O", (v.text != _versionToBeRemoved));
             return v.text != _versionToBeRemoved;
         });
-        console.log("3 handleRemoveVersion %O", newValues);
 
-        console.log("a handleRemoveVersion %O", newValues.length);
-        console.log("b handleRemoveVersion %O", this.state.selectedVerions.length);
         if (newValues.length < this.state.selectedVerions.length) {
             console.log("4 handleRemoveVersion %O", newValues);
             this.setState({

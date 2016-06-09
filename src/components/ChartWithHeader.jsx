@@ -1,11 +1,14 @@
 import React from 'react'
+
+import Chart from './Chart'
+
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import Panel from 'react-bootstrap/lib/Panel';
 import Label from 'react-bootstrap/lib/Label';
 import Button from 'react-bootstrap/lib/Button';
+
 import AutoWidth from '@zalando/react-automatic-width';
-import NewChart from './NewChart'
 
 class ChartWithHeader extends React.Component{
     handleDeleteThisChart() {
@@ -29,7 +32,7 @@ class ChartWithHeader extends React.Component{
                             X
                         </Button>
                         <AutoWidth className="responsive">
-                            <NewChart
+                            <Chart
                                 dataSet = {this.props.dataSet}
                                 viewPortDateRange = {this.props.viewPortDateRange}
                             />
