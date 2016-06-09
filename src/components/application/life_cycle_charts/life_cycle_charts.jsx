@@ -7,6 +7,7 @@ import ChartWithHeader from '../../ChartWithHeader';
 import GlobalBrush from '../../GlobalBrush';
 import { Brush } from 'react-d3-components';
 import AutoWidth from '@zalando/react-automatic-width';
+import DateTime from 'react-datetime'
 
 class LifeCycleCharts extends React.Component {
     constructor(props) {
@@ -93,6 +94,10 @@ class LifeCycleCharts extends React.Component {
         }
     }
 
+    handleDatePicked(moment) {
+        console.log("date : %O", moment);
+    }
+
     render() {
         var charts = [];
 
@@ -131,7 +136,11 @@ class LifeCycleCharts extends React.Component {
                             onChange = {this.handleVersionSelected.bind(this)}
                         />
                     </Col>
-                    <Col md={4}>StartDate</Col>
+                    <Col md={4}>
+                        <DateTime
+                            onChange = {this.handleDatePicked.bind(this)}
+                        />
+                    </Col>
                 </Row>
                 {globalBrush}
                 {charts}
