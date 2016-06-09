@@ -1,8 +1,6 @@
 import 'react-widgets/lib/less/react-widgets.less'
 import React from 'react'
-import { ApplicationName } from './ApplicationName'
 import Chart from './Chart'
-import VersionSelector from './VersionSelector'
 import NewChart from './NewChart'
 import Multiselect from 'react-widgets/lib/Multiselect'
 import DateTime from 'react-datetime'
@@ -79,7 +77,6 @@ class Charts extends React.Component {
         for (let i = 0; i < this.state.versionsWithData.length; i++) {
             children.push(
                 <div>
-                    <ApplicationName name={this.state.versionsWithData[i].version}></ApplicationName>
                     <Chart data = {this.state.versionsWithData[i].data}></Chart>
                 </div>
             );
