@@ -15,7 +15,6 @@ class VersionSelector extends React.Component {
     }
 
     handleChange(_values) {
-        console.log("VersionSelector handleChange %O", _values);
         this.setState({values: _values});
         this.props.onChange(_values);
     }
@@ -27,12 +26,6 @@ class VersionSelector extends React.Component {
     componentWillReceiveProps(nextProps) {
         let rVersion = nextProps.removeVersion;
         if (rVersion !== undefined && rVersion !== this.state.lastRemovedVersion) {
-            console.log("VersionSelector componentWillReceiveProps %O", rVersion);
-
-            console.log("aVersionSelector componentWillReceiveProps %O", this.state.values);
-            console.log("sVersionSelector componentWillReceiveProps %O", this.state.values.filter((v) => {
-                return v.text != rVersion
-            }));
             let newValues = this.state.values.filter((v) => {
                 return v.text != rVersion
             });

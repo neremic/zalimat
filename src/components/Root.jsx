@@ -1,3 +1,5 @@
+"use strict";
+
 import React from 'react'
 import 'react-widgets/lib/less/react-widgets.less'
 import LifeCycleCharts from './application/life_cycle_charts/life_cycle_charts'

@@ -1,3 +1,5 @@
+"use strict";
+
 import React from 'react'
 import { AreaChart } from 'react-d3-components';
 

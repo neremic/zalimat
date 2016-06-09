@@ -1,4 +1,7 @@
+"use strict";
+
 import React from 'react'
+
 import { Brush } from 'react-d3-components';
 
 class GlobalBrush extends React.Component {
@@ -20,19 +23,23 @@ class GlobalBrush extends React.Component {
     }
 
     render() {
-        return (
-            <div className="brush" style={{float: 'none'}}>
-                <Brush
-                    width={this.props.width}
-                    height={50}
-                    margin={{top: 0, bottom: 30, left: 50, right: 20}}
-                    xScale={this.state.xScaleBrush}
-                    extent={[new Date(2016, 5, 5), new Date(Date.now())]}
-                    onChange={this.handleChange.bind(this)}
-                    xAxis={{tickValues: this.state.xScaleBrush.ticks(d3.time.days, 1), tickFormat: d3.time.format("%m/%d")}}
-                />
-            </div>
-        )
+        if (this.props.show) {
+            return (
+                <div className="brush" style={{float: 'none'}}>
+                    <Brush
+                        width={this.props.width}
+                        height={50}
+                        margin={{top: 0, bottom: 30, left: 50, right: 20}}
+                        xScale={this.state.xScaleBrush}
+                        extent={[new Date(2016, 5, 5), new Date(Date.now())]}
+                        onChange={this.handleChange.bind(this)}
+                        xAxis={{tickValues: this.state.xScaleBrush.ticks(d3.time.days, 1), tickFormat: d3.time.format("%m/%d")}}
+                    />
+                </div>
+            )
+        } else {
+            return null
+        }
     }
 }
 

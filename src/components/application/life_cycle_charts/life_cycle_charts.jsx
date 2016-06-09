@@ -1,9 +1,11 @@
+"use strict";
+
 import React from 'react'
 import VersionSelector from '../../VersionSelector'
 import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
-import ChartWithHeader from '../../ChartWithHeader';
+import Charts from '../../Charts';
 import GlobalBrush from '../../GlobalBrush';
 import AutoWidth from '@zalando/react-automatic-width';
 import DateTime from 'react-datetime'
@@ -77,7 +79,6 @@ class LifeCycleCharts extends React.Component {
         });
 
         if (newValues.length < this.state.selectedVerions.length) {
-            console.log("4 handleRemoveVersion %O", newValues);
             this.setState({
                 versionToBeRemoved: _versionToBeRemoved,
                 selectedVerions: newValues
@@ -90,33 +91,6 @@ class LifeCycleCharts extends React.Component {
     }
 
     render() {
-        var charts = [];
-
-        for (let i = 0; i < this.state.selectedVerions.length; i++) {
-            charts.push(
-                <ChartWithHeader
-                    key = {"key" + i}
-                    title = {this.state.selectedVerions[i].text}
-                    onDelete = {this.handleRemoveVersion.bind(this)}
-                    dataSet = {this.state.versionsData.get(this.state.selectedVerions[i].text)}
-                    viewPortDateRange = {this.state.viewPortDateRange}
-                />
-            );
-        }
-
-        let globalBrush = "";
-        if (this.state.selectedVerions.length > 0) {
-            globalBrush =
-                <Row className="show-grid">
-                    <Col md={12}>
-                        <AutoWidth className="responsive">
-                            <GlobalBrush onBrushChange = {this.handleBrushChange.bind(this)}/>
-                        </AutoWidth>
-                    </Col>
-                </Row>
-            ;
-        }
-
         return (
             <Grid>
                 <Row className="show-grid">
@@ -133,8 +107,26 @@ class LifeCycleCharts extends React.Component {
                         />
                     </Col>
                 </Row>
-                {globalBrush}
-                {charts}
+                <Row className="show-grid">
+                    <Col md={12}>
+                        <AutoWidth className="responsive">
+                            <GlobalBrush
+                                show = {this.state.selectedVerions.length > 0}
+                                onBrushChange = {this.handleBrushChange.bind(this)}
+                            />
+                        </AutoWidth>
+                    </Col>
+                </Row>
+                <Row className="show-grid">
+                    <Col md={12}>
+                        <Charts
+                            selectedVersions = {this.state.selectedVerions}
+                            onDelete = {this.handleRemoveVersion.bind(this)}
+                            dataSets = {this.state.versionsData}
+                            viewPortDateRange = {this.state.viewPortDateRange}
+                        />
+                    </Col>
+                </Row>
             </Grid>
         )
     }
