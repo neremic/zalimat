@@ -7,7 +7,6 @@ import NewChart from './NewChart'
 import Multiselect from 'react-widgets/lib/Multiselect'
 import DateTime from 'react-datetime'
 import './react-datetime.css'
-import { HelloMessage } from './HelloMessage'
 import AutoWidth from '@zalando/react-automatic-width';
 
 let lineData = [
