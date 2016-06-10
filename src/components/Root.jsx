@@ -1,8 +1,11 @@
 "use strict";
 
 import React from 'react'
-import 'react-widgets/lib/less/react-widgets.less'
+
 import LifeCycleCharts from './application/life_cycle_charts/life_cycle_charts'
+
+import 'react-widgets/lib/less/react-widgets.less'
+import '../styles/react-datetime.css'
 
 class Root extends React.Component {
     render() {

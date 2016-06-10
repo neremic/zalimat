@@ -1,21 +1,20 @@
 "use strict";
 
 import React from 'react'
+
 import { AreaChart } from 'react-d3-components';
 
 class Chart extends React.Component {
     constructor(props) {
         super(props);
-        let startDate = props.viewPortDateRange.startDate;
-        let endDate = props.viewPortDateRange.endDate;
+        let { startDate, endDate } = props.viewPortDateRange;
         this.state = {
             xScale: d3.time.scale().domain([startDate, endDate]).range([0, 400 - 70]),
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        let startDate = nextProps.viewPortDateRange.startDate;
-        let endDate = nextProps.viewPortDateRange.endDate;
+        let { startDate, endDate } = nextProps.viewPortDateRange;
         this.setState({xScale: d3.time.scale().domain([startDate, endDate]).range([0, nextProps.width - 70])});
     }
 

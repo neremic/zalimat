@@ -7,8 +7,10 @@ import { Brush } from 'react-d3-components';
 class GlobalBrush extends React.Component {
     constructor(props) {
         super(props);
+        let { startDate, endDate } = props.viewPortDateRange;
         this.state = {
-            xScaleBrush: d3.time.scale().domain([new Date(2016, 5, 5), new Date(Date.now())]).range([0, 400 - 70])
+            xScaleBrush: d3.time.scale().domain([startDate, endDate]).range([0, 400 - 70]),
+            xstartDate: startDate
         };
     }
 
@@ -17,8 +19,12 @@ class GlobalBrush extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.width != this.props.width) {
-            this.setState({xScaleBrush: d3.time.scale().domain([new Date(2016, 5, 5), new Date(Date.now())]).range([0, nextProps.width - 70])});
+        let {startDate, endDate} = nextProps.viewPortDateRange;
+        if (nextProps.width != this.props.width || this.state.xstartDate != startDate) {
+            this.setState({
+                xScaleBrush: d3.time.scale().domain([startDate, endDate]).range([0, nextProps.width - 70]),
+                xstartDate: startDate
+            });
         }
     }
 
@@ -31,7 +37,7 @@ class GlobalBrush extends React.Component {
                         height={50}
                         margin={{top: 0, bottom: 30, left: 50, right: 20}}
                         xScale={this.state.xScaleBrush}
-                        extent={[new Date(2016, 5, 5), new Date(Date.now())]}
+                        extent={[this.props.viewPortDateRange.startDate, this.props.viewPortDateRange.endDate]}
                         onChange={this.handleChange.bind(this)}
                         xAxis={{tickValues: this.state.xScaleBrush.ticks(d3.time.days, 1), tickFormat: d3.time.format("%m/%d")}}
                     />

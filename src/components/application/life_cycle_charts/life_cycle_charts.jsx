@@ -1,15 +1,18 @@
 "use strict";
 
 import React from 'react'
-import VersionSelector from '../../VersionSelector'
 import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
-import Charts from '../../Charts';
-import GlobalBrush from '../../GlobalBrush';
+
+import moment from 'moment';
+
 import AutoWidth from '@zalando/react-automatic-width';
 import DateTime from 'react-datetime'
-import '../../../styles/react-datetime.css'
+
+import Charts from '../../Charts';
+import GlobalBrush from '../../GlobalBrush';
+import VersionSelector from '../../VersionSelector'
 
 class LifeCycleCharts extends React.Component {
     constructor(props) {
@@ -17,13 +20,17 @@ class LifeCycleCharts extends React.Component {
         this.state = {
             versionToBeRemoved : undefined,
             versions : [],
-            viewPortDateRange : {
-                startDate : new Date(2016, 5, 5),
-                endDate : new Date(Date.now())
-            },
             selectedVerions : [],
             versionsData : new Map(),
-            xScaleBrush: d3.time.scale().domain([new Date(2015, 2, 5), new Date(2015, 2, 26)]).range([0, 400 - 70])
+            viewPortDateRange : {
+                startDate : moment().subtract(1, "days").toDate(),
+                endDate : new Date(Date.now())
+            },
+            brushViewPortDateRange : {
+                startDate : moment().subtract(1, "days").toDate(),
+                endDate : new Date(Date.now())
+            },
+            xScaleBrush: d3.time.scale().domain([moment().subtract(1, "days").toDate(), new Date(Date.now())]).range([0, 400 - 70])
         };
         for (let i = 0; i<20; i++) {
             var r = Math.random();
@@ -33,31 +40,6 @@ class LifeCycleCharts extends React.Component {
             }
             this.state.versions.push(entry);
         }
-    }
-
-    handleBrushChange(start, end) {
-        this.setState({
-            viewPortDateRange : {
-                startDate : start,
-                endDate : end
-            }
-        });
-    }
-
-    handleVersionSelected(selectedOptions) {
-        let _versionsData = this.state.versionsData;
-        for (let i = 0; i < selectedOptions.length; i++) {
-            let applicationId = selectedOptions[i].text;
-            if (_versionsData.get(applicationId) == undefined) {
-                _versionsData.set(applicationId, this.createRandomData());
-            }
-        }
-
-        this.setState(
-            { selectedVerions : selectedOptions,
-                versionsData : _versionsData
-            }
-        );
     }
 
     createRandomData() {
@@ -73,21 +55,61 @@ class LifeCycleCharts extends React.Component {
         return data;
     }
 
-    handleRemoveVersion(_versionToBeRemoved) {
+    handleBrushChanged(start, end) {
+        this.setState({
+            viewPortDateRange : {
+                startDate : start,
+                endDate : end
+            }
+        });
+    }
+
+    handleVersionSelected(selectedOptions) {
+        let versionsData = this.state.versionsData;
+        for (let i = 0; i < selectedOptions.length; i++) {
+            let applicationId = selectedOptions[i].text;
+            if (versionsData.get(applicationId) == undefined) {
+                versionsData.set(applicationId, this.createRandomData());
+            }
+        }
+
+        this.setState(
+            { selectedVerions : selectedOptions,
+                versionsData : versionsData
+            }
+        );
+    }
+
+    handleRemoveVersion(versionToBeRemoved) {
         let newValues = this.state.selectedVerions.filter((v) => {
-            return v.text != _versionToBeRemoved;
+            return v.text != versionToBeRemoved;
         });
 
         if (newValues.length < this.state.selectedVerions.length) {
             this.setState({
-                versionToBeRemoved: _versionToBeRemoved,
+                versionToBeRemoved: versionToBeRemoved,
                 selectedVerions: newValues
             });
         }
     }
 
     handleDatePicked(moment) {
-        console.log("date : %O", moment);
+        this.setState({
+            viewPortDateRange : {
+                startDate : moment.toDate(),
+                endDate : new Date(Date.now())
+            },
+            brushViewPortDateRange : {
+                startDate : moment.toDate(),
+                endDate : new Date(Date.now())
+            }
+        });
+    }
+
+    isValidDate(currentDate, selectedDate) {
+        let now = moment();
+        let diff = now.diff(currentDate, 'days');
+        return diff > 0;
     }
 
     render() {
@@ -103,6 +125,9 @@ class LifeCycleCharts extends React.Component {
                     </Col>
                     <Col md={4}>
                         <DateTime
+                            defaultValue = {moment().subtract(1, "days")}
+                            timeFormat = {false}
+                            isValidDate = {this.isValidDate.bind(this)}
                             onChange = {this.handleDatePicked.bind(this)}
                         />
                     </Col>
@@ -112,7 +137,8 @@ class LifeCycleCharts extends React.Component {
                         <AutoWidth className="responsive">
                             <GlobalBrush
                                 show = {this.state.selectedVerions.length > 0}
-                                onBrushChange = {this.handleBrushChange.bind(this)}
+                                onBrushChange = {this.handleBrushChanged.bind(this)}
+                                viewPortDateRange = {this.state.brushViewPortDateRange}
                             />
                         </AutoWidth>
                     </Col>

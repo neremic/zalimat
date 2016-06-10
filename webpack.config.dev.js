@@ -32,7 +32,7 @@ export default {
             {test: /(\.css)$/, loaders: ['style', 'css']},
             { test: /\.less$/, loader: "style-loader!css-loader!less-loader" },
             { test: /\.gif$/, loader: "url-loader?mimetype=image/png" },
-            {test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff'},
+            {test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff'}
         ]
 
     }
