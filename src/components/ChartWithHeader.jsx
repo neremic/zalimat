@@ -13,6 +13,12 @@ import Button from 'react-bootstrap/lib/Button';
 import AutoWidth from '@zalando/react-automatic-width';
 
 class ChartWithHeader extends React.Component{
+    constructor(props){
+        super(props);
+
+        this.handleDeleteThisChart = this.handleDeleteThisChart.bind(this);
+    }
+
     handleDeleteThisChart() {
         this.props.onDelete(this.props.title);
     }
@@ -30,7 +36,7 @@ class ChartWithHeader extends React.Component{
                         </h2>
                         <Button
                             bsStyle="danger" bsSize="xsmall"
-                            onClick = {this.handleDeleteThisChart.bind(this)}>
+                            onClick = {this.handleDeleteThisChart}>
                             X
                         </Button>
                         <AutoWidth className="responsive">
@@ -45,5 +51,15 @@ class ChartWithHeader extends React.Component{
         )
     }
 }
+
+ChartWithHeader.propTypes = {
+    title: React.PropTypes.string,
+    dataSet: React.PropTypes.object,
+    viewPortDateRange: React.PropTypes.shape({
+        startDate: React.PropTypes.object,
+        endDate: React.PropTypes.object
+    }),
+    onDelete: React.PropTypes.func
+};
 
 export default ChartWithHeader;

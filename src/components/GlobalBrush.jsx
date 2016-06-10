@@ -12,6 +12,7 @@ class GlobalBrush extends React.Component {
             xScaleBrush: d3.time.scale().domain([startDate, endDate]).range([0, 400 - 70]),
             xstartDate: startDate
         };
+        this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange(extent) {
@@ -38,7 +39,7 @@ class GlobalBrush extends React.Component {
                         margin={{top: 0, bottom: 30, left: 50, right: 20}}
                         xScale={this.state.xScaleBrush}
                         extent={[this.props.viewPortDateRange.startDate, this.props.viewPortDateRange.endDate]}
-                        onChange={this.handleChange.bind(this)}
+                        onChange={this.handleChange}
                         xAxis={{tickValues: this.state.xScaleBrush.ticks(d3.time.days, 1), tickFormat: d3.time.format("%m/%d")}}
                     />
                 </div>
@@ -48,5 +49,14 @@ class GlobalBrush extends React.Component {
         }
     }
 }
+
+GlobalBrush.propTypes = {
+    show: React.PropTypes.bool,
+    viewPortDateRange: React.PropTypes.shape({
+        startDate: React.PropTypes.object,
+        endDate: React.PropTypes.object
+    }),
+    onBrushChange: React.PropTypes.func
+};
 
 export default GlobalBrush;

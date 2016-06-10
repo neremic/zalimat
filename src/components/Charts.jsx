@@ -29,4 +29,14 @@ class Charts extends React.Component {
     }
 }
 
+Charts.propTypes = {
+    selectedVersions: React.PropTypes.array,
+    dataSet: React.PropTypes.object,
+    viewPortDateRange: React.PropTypes.shape({
+        startDate: React.PropTypes.object,
+        endDate: React.PropTypes.object
+    }),
+    onDelete: React.PropTypes.func
+};
+
 export default Charts;

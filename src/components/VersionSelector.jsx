@@ -15,15 +15,17 @@ class VersionSelector extends React.Component {
             values: [],
             lastRemovedVersion: undefined
         }
+        this.handleSelect = this.handleSelect.bind(this);
+        this.handleReset = this.handleReset.bind(this);
     }
 
-    handleChange(values) {
+    handleSelect(values) {
         this.setState({values: values});
         this.props.onChange(values);
     }
 
     handleReset() {
-        this.handleChange([]);
+        this.handleSelect([]);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -43,17 +45,17 @@ class VersionSelector extends React.Component {
         return (
             <Row className="show-grid">
                 <Col md={12}>
-                    <span>Title</span>
+                    <span>Select versions</span>
                     <Multiselect
                         valueField = 'value'
                         textField = 'text'
                         value = {this.state.values}
                         data = {this.props.versions}
-                        onChange = {this.handleChange.bind(this)}>
+                        onChange = {this.handleSelect}>
                     </Multiselect>
                     <Button
                         bsStyle = "primary" bsSize="xsmall"
-                        onClick = {this.handleReset.bind(this)}>
+                        onClick = {this.handleReset}>
                         Reset
                     </Button>
                 </Col>
@@ -62,6 +64,10 @@ class VersionSelector extends React.Component {
     }
 };
 
-
+VersionSelector.propTypes = {
+    removeVersion: React.PropTypes.string,
+    versions: React.PropTypes.array,
+    onChange: React.PropTypes.func
+};
 
 export default VersionSelector;
