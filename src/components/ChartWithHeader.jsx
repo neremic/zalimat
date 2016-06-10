@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import Chart from './Chart'
+import Chart from './Chart.jsx'
 
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
