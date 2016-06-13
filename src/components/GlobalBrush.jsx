@@ -3,6 +3,7 @@
 import React from 'react'
 
 import { Brush } from 'react-d3-components';
+import d3 from 'd3';
 
 class GlobalBrush extends React.Component {
     constructor(props) {

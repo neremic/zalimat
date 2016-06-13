@@ -8,9 +8,9 @@
     "open:src": "babel-node tools/srcServer.js",
     "lint": "node_modules/.bin/esw webpack.config.* src tools",
     "lint:watch": "npm run lint -- --watch",
-    "testx": "mocha --reporter progress tools/testSetup.js \"test/**/*.test.js\"",
+    "test": "mocha --reporter progress tools/testSetup.js \"test/**/*.test.js\"",
     "test:watch": "npm run test -- --watch",
-    "test": "jest --verbose"
+    "testx": "jest --verbose"
   },
   "author": "Norman Eremic",
   "license": "tbd",
@@ -82,14 +82,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/coryhouse/pluralsight-redux-starter"
-  },
-    "jest": {
-        "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
-        "unmockedModulePathPatterns": [
-            "<rootDir>/node_modules/react",
-            "<rootDir>/node_modules/react/",
-            "<rootDir>/node_modules/react-dom/",
-            "<rootDir>/node_modules/react-addons-test-utils/"
-        ]
   }
 }

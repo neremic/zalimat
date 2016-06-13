@@ -2,6 +2,8 @@
 
 import React from 'react'
 
+import d3 from 'd3';
+
 import { AreaChart } from 'react-d3-components';
 
 class Chart extends React.Component {
