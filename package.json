@@ -67,7 +67,6 @@
     "open": "0.0.5",
     "rd3": "0.6.3",
     "react-addons-test-utils": "^15.0.2",
-    "react-automatic-width": "0.0.5",
     "react-d3-components": "0.6.4",
     "react-dom": "^15.1.0",
     "redux-immutable-state-invariant": "1.2.3",
