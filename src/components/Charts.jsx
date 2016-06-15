@@ -7,8 +7,11 @@ import ChartWithHeader from './ChartWithHeader';
 class Charts extends React.Component {
     render() {
         var charts = [];
-        if (this.props.selectedVersions !== undefined) {
+        if (this.props.selectedVersions !== undefined && this.props.dataSets !== undefined) {
             for (let i = 0; i < this.props.selectedVersions.length; i++) {
+                if (!this.props.dataSets.get(this.props.selectedVersions[i].text)) {
+                    continue;
+                }
                 charts.push(
                     <ChartWithHeader
                         key = {"key" + i}
@@ -31,7 +34,7 @@ class Charts extends React.Component {
 
 Charts.propTypes = {
     selectedVersions: React.PropTypes.array,
-    dataSet: React.PropTypes.object,
+    dataSets: React.PropTypes.object,
     viewPortDateRange: React.PropTypes.shape({
         startDate: React.PropTypes.object,
         endDate: React.PropTypes.object
