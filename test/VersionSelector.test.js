@@ -8,15 +8,16 @@ import Multiselect from 'react-widgets/lib/Multiselect'
 import Button from 'react-bootstrap/lib/Button';
 
 import { shallow } from 'enzyme';
+import sinon from 'sinon';
 import expect from 'expect';
 
 describe('<VersionSelector />', () => {
 
-    it('renders an `Multiselect` component', () => {
+    it('renders a `Multiselect` component', () => {
         const testProps = {
             versions : [{value: 1, text: 'v1'}, {value: 2, text: 'v2'}],
             removeVersion : undefined,
-            onChange : () => {return}
+            onChange : () => {}
         }
 
         const wrapper = shallow(<VersionSelector {...testProps}/>);
@@ -31,11 +32,11 @@ describe('<VersionSelector />', () => {
         expect(multiselectNode.prop("onChange")).toNotBe(null);
     });
 
-    it('renders an `Button` component', () => {
+    it('renders a `Button` component', () => {
         const testProps = {
             versions : [{value: 1, text: 'v1'}, {value: 2, text: 'v2'}],
             removeVersion : undefined,
-            onChange : () => {return}
+            onChange : () => {}
         }
 
         const wrapper = shallow(<VersionSelector {...testProps}/>);
@@ -44,5 +45,20 @@ describe('<VersionSelector />', () => {
         expect(buttonNode.length).toBe(1);
     });
 
+    it('calls its callback', () => {
+        const testProps = {
+            versions : [{value: 1, text: 'v1'}, {value: 2, text: 'v2'}],
+            removeVersion : undefined,
+            onChange : sinon.spy()
+        }
+
+        const wrapper = shallow(<VersionSelector {...testProps}/>);
+
+        const buttonNode = wrapper.find(Button);
+        buttonNode.simulate('click');
+
+        expect(testProps.onChange.calledOnce).toBe(true);
+        expect(buttonNode.length).toBe(1);
+    });
 
 });
