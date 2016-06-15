@@ -61,4 +61,64 @@ describe('<VersionSelector />', () => {
         expect(buttonNode.length).toBe(1);
     });
 
+    it('does not update state if no version to be removed', () => {
+        const testProps = {
+            versions : [{value: 1, text: 'v1'}, {value: 2, text: 'v2'}],
+            removeVersion : undefined,
+            onChange : () => {}
+        }
+
+        const wrapper = shallow(<VersionSelector {...testProps}/>);
+
+        expect(wrapper.state('values')).toEqual([]);
+
+        wrapper.setState({values: testProps.versions});
+
+        expect(wrapper.state('values')).toEqual(testProps.versions);
+
+        wrapper.setProps({removeVersion: undefined})
+
+        expect(wrapper.state('values')).toEqual(testProps.versions);
+    });
+
+    it('does update state and removed passed in version name', () => {
+        const testProps = {
+            versions : [{value: 1, text: 'v1'}, {value: 2, text: 'v2'}],
+            removeVersion : undefined,
+            onChange : () => {}
+        }
+
+        const wrapper = shallow(<VersionSelector {...testProps}/>);
+
+        expect(wrapper.state('values')).toEqual([]);
+
+        wrapper.setState({values: testProps.versions});
+
+        expect(wrapper.state('values')).toEqual(testProps.versions);
+
+        wrapper.setProps({removeVersion: 'v1'})
+
+        expect(wrapper.state('values')).toEqual([{value: 2, text: 'v2'}]);
+    });
+
+    it('does not change versions in state if removed passed in version name is not present', () => {
+        const testProps = {
+            versions : [{value: 1, text: 'v1'}, {value: 2, text: 'v2'}],
+            removeVersion : undefined,
+            onChange : () => {}
+        }
+
+        const wrapper = shallow(<VersionSelector {...testProps}/>);
+
+        expect(wrapper.state('values')).toEqual([]);
+
+        wrapper.setState({values: testProps.versions});
+
+        expect(wrapper.state('values')).toEqual(testProps.versions);
+
+        wrapper.setProps({removeVersion: 'v3'})
+
+        expect(wrapper.state('values')).toEqual(testProps.versions);
+    });
+
 });

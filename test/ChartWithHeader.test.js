@@ -10,6 +10,7 @@ import Button from 'react-bootstrap/lib/Button';
 import moment from 'moment';
 
 import { shallow } from 'enzyme';
+import sinon from 'sinon';
 import expect from 'expect';
 
 describe('<ChartWithHeader />', () => {
@@ -26,7 +27,6 @@ describe('<ChartWithHeader />', () => {
         expect(labelNode.prop("children")).toBe(testProps.title);
     });
 
-
     it('renders the `delete button` component', () => {
         const testProps = {}
 
@@ -36,6 +36,18 @@ describe('<ChartWithHeader />', () => {
         expect(buttonNode.length).toBe(1);
         expect(buttonNode.prop("children")).toNotBe(undefined).toNotBe(null);
         expect(buttonNode.prop("onClick")).toNotBe(undefined);
+    });
+
+    it('calls the callback via click onto the `delete button` component', () => {
+        const testProps = {
+            onDelete : sinon.spy()
+        }
+
+        const wrapper = shallow(<ChartWithHeader {...testProps}/>);
+        const buttonNode = wrapper.find(Button);
+        buttonNode.simulate('click');
+
+        expect(testProps.onDelete.calledOnce).toBe(true);
     });
 
     it('renders a `chart` component', () => {
