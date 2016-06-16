@@ -8,17 +8,25 @@ class Charts extends React.Component {
     render() {
         var charts = [];
         if (this.props.selectedVersions !== undefined && this.props.dataSets !== undefined) {
-            for (let i = 0; i < this.props.selectedVersions.length; i++) {
-                if (!this.props.dataSets.get(this.props.selectedVersions[i].text)) {
+            let {selectedVersions, dataSets, onDelete, viewPortDateRange, ...otherProps} = this.props;
+
+            for (let i = 0; i < selectedVersions.length; i++) {
+                if (!dataSets.get(selectedVersions[i].value)) {
                     continue;
-                }
+                };
+
+                let versionId = selectedVersions[i].value;
+                let versionTitle = selectedVersions[i].text;
+
                 charts.push(
                     <ChartWithHeader
                         key = {"key" + i}
-                        title = {this.props.selectedVersions[i].text}
-                        dataSet = {this.props.dataSets.get(this.props.selectedVersions[i].text)}
-                        onDelete = {this.props.onDelete}
-                        viewPortDateRange = {this.props.viewPortDateRange}
+                        title = {versionTitle}
+                        dataSet = {dataSets.get(versionId)}
+                        onDelete = {onDelete}
+                        viewPortDateRange = {viewPortDateRange}
+                        versionId = {versionId}
+                        {...otherProps}
                     />
                 );
             }

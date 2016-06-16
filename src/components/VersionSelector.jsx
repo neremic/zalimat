@@ -32,7 +32,7 @@ class VersionSelector extends React.Component {
         let rVersion = nextProps.removeVersion;
         if (rVersion !== undefined && rVersion !== this.state.lastRemovedVersion) {
             let newValues = this.state.values.filter((v) => {
-                return v.text != rVersion
+                return v.value != rVersion
             });
             this.setState({
                 values: newValues,

@@ -20,10 +20,24 @@ class ChartWithHeader extends React.Component{
     }
 
     handleDeleteThisChart() {
-        this.props.onDelete(this.props.title);
+        this.props.onDelete(this.props.versionId);
     }
 
     render() {
+        let {title, dataSet, viewPortDateRange, applicationId, versionId, children} = this.props;
+
+        let childrenWithProps = [];
+        const childWithProps = React.Children.map(this.props.children,
+            (child, index) => {
+                let clonedChild = React.cloneElement(child, {
+                    key: applicationId + versionId + index,
+                    applicationId: applicationId,
+                    versionId: versionId
+                });
+                childrenWithProps.push(clonedChild);
+            }
+        );
+
         return (
             <Row className="show-grid">
                 <Col md={12}>
@@ -31,7 +45,7 @@ class ChartWithHeader extends React.Component{
                         <hr/>
                         <h2>
                             <Label bsStyle="success">
-                                {this.props.title}
+                                {title}
                             </Label>
                         </h2>
                         <Button
@@ -41,10 +55,11 @@ class ChartWithHeader extends React.Component{
                         </Button>
                         <AutoWidth className="responsive">
                             <Chart
-                                dataSet = {this.props.dataSet}
-                                viewPortDateRange = {this.props.viewPortDateRange}
+                                dataSet = {dataSet}
+                                viewPortDateRange = {viewPortDateRange}
                             />
                         </AutoWidth>
+                        {childrenWithProps}
                     </Panel>
                 </Col>
             </Row>

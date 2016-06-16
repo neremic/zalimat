@@ -130,13 +130,14 @@ describe('<Charts />', () => {
 
     it('renders the only matching version data', () => {
         const testProps = {
-            selectedVersions : [{value: 1, text: 'v1'}, {value: 2, text: 'v2'}],
+            selectedVersions : [{value: 'id1', text: 'v1'}, {value: 'id2', text: 'v2'}],
             onDelete : () => {},
             viewPortDateRange : {
                 startDate : moment().subtract(1, "days").toDate(),
                 endDate : new Date(Date.now())
             },
-            dataSets : (new Map()).set('v1', createRandomData())
+            dataSets : (new Map()).set('id1', createRandomData()),
+            applicationId : 'kio'
         }
 
         function createRandomData() {
@@ -158,20 +159,23 @@ describe('<Charts />', () => {
         expect(wrapper.children().length).toBe(1);
         expect(chartNode.type()).toBe(ChartWithHeader);
         expect(chartNode.prop("viewPortDateRange")).toEqual(testProps.viewPortDateRange);
-        expect(chartNode.prop("dataSet")).toEqual(testProps.dataSets.get('v1'));
+        expect(chartNode.prop("dataSet")).toEqual(testProps.dataSets.get('id1'));
         expect(chartNode.prop("title")).toBe('v1');
+        expect(chartNode.prop("versionId")).toBe('id1');
+        expect(chartNode.prop("applicationId")).toBe(testProps.applicationId);
         expect(chartNode.prop("onDelete")).toEqual(testProps.onDelete);
     });
 
     it('renders only matching versions data', () => {
         const testProps = {
-            selectedVersions : [{value: 1, text: 'v1'}, {value: 2, text: 'v2'}],
+            selectedVersions : [{value: 'id1', text: 'v1'}, {value: 'id2', text: 'v2'}],
             onDelete : () => {},
             viewPortDateRange : {
                 startDate : moment().subtract(1, "days").toDate(),
                 endDate : new Date(Date.now())
             },
-            dataSets : (new Map()).set('v1', createRandomData()).set('v3', createRandomData()).set('v2', createRandomData())
+            dataSets : (new Map()).set('id1', createRandomData()).set('id3', createRandomData()).set('id2', createRandomData()),
+            applicationId : 'kio'
         }
 
         function createRandomData() {
@@ -194,13 +198,17 @@ describe('<Charts />', () => {
         expect(wrapper.children().length).toBe(2);
         expect(chartNode1.type()).toBe(ChartWithHeader);
         expect(chartNode1.prop("viewPortDateRange")).toEqual(testProps.viewPortDateRange);
-        expect(chartNode1.prop("dataSet")).toEqual(testProps.dataSets.get('v1'));
+        expect(chartNode1.prop("dataSet")).toEqual(testProps.dataSets.get('id1'));
+        expect(chartNode1.prop("applicationId")).toBe(testProps.applicationId);
+        expect(chartNode1.prop("versionId")).toBe('id1');
         expect(chartNode1.prop("title")).toBe('v1');
         expect(chartNode1.prop("onDelete")).toEqual(testProps.onDelete);
         expect(chartNode2.type()).toBe(ChartWithHeader);
         expect(chartNode2.prop("viewPortDateRange")).toEqual(testProps.viewPortDateRange);
-        expect(chartNode2.prop("dataSet")).toEqual(testProps.dataSets.get('v2'));
+        expect(chartNode2.prop("dataSet")).toEqual(testProps.dataSets.get('id2'));
         expect(chartNode2.prop("title")).toBe('v2');
+        expect(chartNode2.prop("versionId")).toBe('id2');
+        expect(chartNode2.prop("applicationId")).toBe(testProps.applicationId);
         expect(chartNode2.prop("onDelete")).toEqual(testProps.onDelete);
     });
 

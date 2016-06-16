@@ -11,6 +11,8 @@ import AutoWidth from '@zalando/react-automatic-width';
 import DateTime from 'react-datetime'
 
 import Charts from '../../Charts';
+import DisplayApp from '../../DisplayApp';
+import DisplayAppAndVersion from '../../DisplayAppAndVersion';
 import GlobalBrush from '../../GlobalBrush';
 import VersionSelector from '../../VersionSelector'
 
@@ -67,9 +69,9 @@ class LifeCycleCharts extends React.Component {
     handleVersionSelected(selectedOptions) {
         let versionsData = this.state.versionsData;
         for (let i = 0; i < selectedOptions.length; i++) {
-            let applicationId = selectedOptions[i].text;
-            if (versionsData.get(applicationId) == undefined) {
-                versionsData.set(applicationId, this.createRandomData());
+            let versionId = selectedOptions[i].value;
+            if (versionsData.get(versionId) == undefined) {
+                versionsData.set(versionId, this.createRandomData());
             }
         }
 
@@ -82,7 +84,7 @@ class LifeCycleCharts extends React.Component {
 
     handleRemoveVersion(versionToBeRemoved) {
         let newValues = this.state.selectedVerions.filter((v) => {
-            return v.text != versionToBeRemoved;
+            return v.value != versionToBeRemoved;
         });
 
         if (newValues.length < this.state.selectedVerions.length) {
@@ -150,7 +152,11 @@ class LifeCycleCharts extends React.Component {
                             onDelete = {this.handleRemoveVersion.bind(this)}
                             dataSets = {this.state.versionsData}
                             viewPortDateRange = {this.state.viewPortDateRange}
-                        />
+                            applicationId = "kio"
+                        >
+                            <DisplayApp/>
+                            <DisplayAppAndVersion/>
+                        </Charts>
                     </Col>
                 </Row>
             </Grid>
