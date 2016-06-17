@@ -10,7 +10,7 @@ class GlobalBrush extends React.Component {
         super(props);
         let { startDate, endDate } = props.viewPortDateRange;
         this.state = {
-            xScaleBrush: d3.time.scale().domain([startDate, endDate]).range([0, 400 - 70]),
+            xScaleBrush: d3.time.scale().domain([startDate, endDate]).range([0, 400 - 70]), // magic numbers ✨🎩✨
             xstartDate: startDate
         };
         this.handleChange = this.handleChange.bind(this);
@@ -21,10 +21,11 @@ class GlobalBrush extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        // use const when you don't plan to reassign
         let {startDate, endDate} = nextProps.viewPortDateRange;
         if (nextProps.width != this.props.width || this.state.xstartDate != startDate) {
             this.setState({
-                xScaleBrush: d3.time.scale().domain([startDate, endDate]).range([0, nextProps.width - 70]),
+                xScaleBrush: d3.time.scale().domain([startDate, endDate]).range([0, nextProps.width - 70]),// magic numbers ✨🎩✨
                 xstartDate: startDate
             });
         }
@@ -36,11 +37,13 @@ class GlobalBrush extends React.Component {
                 <div className="brush" style={{float: 'none'}}>
                     <Brush
                         width={this.props.width}
+                        {/* magic numbers ✨🎩✨ */} 
                         height={50}
                         margin={{top: 0, bottom: 30, left: 50, right: 20}}
                         xScale={this.state.xScaleBrush}
                         extent={[this.props.viewPortDateRange.startDate, this.props.viewPortDateRange.endDate]}
                         onChange={this.handleChange}
+                        {/* make ticks configurable or dynamic */} 
                         xAxis={{tickValues: this.state.xScaleBrush.ticks(d3.time.days, 1), tickFormat: d3.time.format("%m/%d")}}
                     />
                 </div>
@@ -53,6 +56,7 @@ class GlobalBrush extends React.Component {
 
 GlobalBrush.propTypes = {
     show: React.PropTypes.bool,
+    // shape! 🎉
     viewPortDateRange: React.PropTypes.shape({
         startDate: React.PropTypes.object,
         endDate: React.PropTypes.object
