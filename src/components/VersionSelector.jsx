@@ -4,6 +4,7 @@ import React from 'react'
 
 import Multiselect from 'react-widgets/lib/Multiselect'
 
+// bootstrap dependency OK for prototyping, but not production
 import Button from 'react-bootstrap/lib/Button';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
@@ -31,6 +32,9 @@ class VersionSelector extends React.Component {
     componentWillReceiveProps(nextProps) {
         let rVersion = nextProps.removeVersion;
         if (rVersion !== undefined && rVersion !== this.state.lastRemovedVersion) {
+            /*
+            couldn't we just compare the length of previous and new values and set if not equal?
+            */
             let newValues = this.state.values.filter((v) => {
                 return v.value != rVersion
             });
@@ -66,7 +70,10 @@ class VersionSelector extends React.Component {
 
 VersionSelector.propTypes = {
     removeVersion: React.PropTypes.string,
+    // you can further specify the content of the array, e.g.:
+    // React.PropTypes.arrayOf(React.PropTypes.string)
     versions: React.PropTypes.array,
+    // also, if it's required, use .isRequired
     onChange: React.PropTypes.func
 };
 
