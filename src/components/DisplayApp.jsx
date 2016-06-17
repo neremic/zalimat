@@ -2,6 +2,9 @@
 
 import React from 'react';
 
+// when you only render props it can be shortened to a function
+// export default ({applicationId}) => <div>My applicationId is {applicationId}</div>
+
 class DisplayApp extends React.Component {
 
     render() {
