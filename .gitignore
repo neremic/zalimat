@@ -1,3 +1,3 @@
 .idea/
-npm-debug.log
+npm-debug.log # extend this to get rid of npm-debug.logs in repo ^^
 node_modules/
