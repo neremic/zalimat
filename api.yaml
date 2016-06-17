@@ -22,6 +22,10 @@ security:
 
 paths:
 
+  # /apps/{app_id}/versions from kio will yield all versions, not all of them were necessarily deployed
+  # maybe introduce a second endpoint to get deployed versions for a certain time frame?
+  # also the abstract concept of "versions" might not exist for too long anymore, but since a "version" is only a string
+  # for us, it should not matter much
   '/apps/{application_id}/versions/{version_id}/instance_histories':
     get:
       summary: read instance history of a version of an application
@@ -35,14 +39,14 @@ paths:
         - $ref: '#/parameters/VersionID'
         - name: start_date
           in: query
-          description: parm1
+          description: parm1 # 💩
           required: false
           type: string
           format: date-time
           allowEmptyValue: false
         - name: end_date
           in: query
-          description: parm1
+          description: parm1 # 💩
           required: false
           type: string
           format: date-time
