@@ -16,18 +16,18 @@
   "license": "tbd",
   "dependencies": {
     "@zalando/react-automatic-width": "0.0.5",
-    "babel-polyfill": "6.9.1",
-    "bootstrap": "3.3.6",
-    "cldr-data": "^29.0.1",
-    "globalize": "^1.1.1",
+    "babel-polyfill": "6.9.1", # # not a production dependency, we would transpile the code once and then distribute
+    "bootstrap": "3.3.6", # okay for prototyping
+    "cldr-data": "^29.0.1", # not sure if a production dependency
+    "globalize": "^1.1.1", # not sure if a production dependency
     "jquery": "^2.2.4",
-    "less": "^2.7.1",
+    "less": "^2.7.1", # not a production dependency
     "moment": "^2.13.0",
-    "react": "15.1.0",
+    "react": "15.1.0", # this is usually a peerDependency
     "react-addons-create-fragment": "^15.1.0",
     "react-bootstrap": "^0.29.4",
     "react-datetime": "^2.3.1",
-    "react-dom": "15.1.0",
+    "react-dom": "15.1.0", # this is usually a peerDependency
     "react-filtered-multiselect": "^0.4.2",
     "react-redux": "4.4.5",
     "react-router": "2.4.1",
@@ -36,7 +36,7 @@
     "react-widgets": "^3.3.2",
     "redux": "3.5.2",
     "redux-thunk": "2.0.1",
-    "toastr": "2.1.2"
+    "toastr": "2.1.2" # not a production dependency
   },
   "devDependencies": {
     "babel-cli": "6.9.0",
