@@ -1,0 +1,120 @@
+swagger: '2.0'
+
+# basic meta information
+info:
+  title: Application Lifecycle ManangementAPI
+  version: '0.2'
+  description: STUPS' Application Lifecycle ManangementAPI registry.
+
+externalDocs:
+  description: STUPS overview
+  url: http://stups.io
+
+# technical configuration
+basePath: /
+produces:
+- application/json
+consumes:
+- application/json
+
+security:
+  - oauth2: [uid]
+
+paths:
+
+  '/apps/{application_id}/versions/{version_id}/instance_histories':
+    get:
+      summary: read instance history of a version of an application
+      description: |
+        Returns a list of dates and instance count for the specified application and its version. The list might be narrowed down by specifing a start date and/or end date
+      tags:
+        - Versions
+      operationId: 'org.zalando.stups.kio.api/read-version-history-by-version-by-application'
+      parameters:
+        - $ref: '#/parameters/ApplicationID'
+        - $ref: '#/parameters/VersionID'
+        - name: start_date
+          in: query
+          description: parm1
+          required: false
+          type: string
+          format: date-time
+          allowEmptyValue: false
+        - name: end_date
+          in: query
+          description: parm1
+          required: false
+          type: string
+          format: date-time
+          allowEmptyValue: false
+      responses:
+        200:
+          description: Returns detailed information
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Unique identifier of the version
+                example: 1.0
+              application_id:
+                type: string
+                description: ID of the version's application
+                example: kio
+              change_date:
+                type: string
+                format: date-time
+                description: Point in time when the instance count of the version changed.
+                example: '2015-04-25T16:25:00.000Z'
+              instances_count:
+                type: integer
+                format: int32
+                description: amount of instances at the gi
+                example: 4
+
+        404:
+          description: Not found e.g. no valid application ID or version ID or both
+        default:
+          $ref: '#/responses/Error'
+
+# definitions
+
+parameters:
+  ApplicationID:
+    name: application_id
+    in: path
+    type: string
+    description: ID of the application
+    required: true
+    pattern: "^[a-z][a-z0-9-]*[a-z0-9]$"
+    #example: kio
+
+  VersionID:
+    name: version_id
+    in: path
+    type: string
+    description: ID of the version
+    required: true
+    pattern: "^[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?$"
+    #example: "1.0"
+
+responses:
+  Error:
+    description: An error occured.
+    schema:
+      $ref: '#/definitions/Error'
+
+definitions:
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
+
+securityDefinitions:
+  oauth2:
+    type: oauth2
+    flow: implicit
+    authorizationUrl: https://example.com/oauth2/dialog
+    scopes:
+      uid: Unique identifier of the user accessing the service.
