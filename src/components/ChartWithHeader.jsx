@@ -16,6 +16,7 @@ class ChartWithHeader extends React.Component{
     constructor(props){
         super(props);
 
+        // this is a bit weird, you can just bind when you're using it
         this.handleDeleteThisChart = this.handleDeleteThisChart.bind(this);
     }
 
@@ -30,6 +31,8 @@ class ChartWithHeader extends React.Component{
         const childWithProps = React.Children.map(this.props.children,
             (child, index) => {
                 let clonedChild = React.cloneElement(child, {
+                    // use string interpolation to make clear that these are not numbers
+                    // eg `${applicationId}${versionId}${index}`
                     key: applicationId + versionId + index,
                     applicationId: applicationId,
                     versionId: versionId
