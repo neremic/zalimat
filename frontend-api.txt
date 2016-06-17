@@ -1,0 +1,63 @@
+Small docu about the frontend API
+
+There are the following components present:
+- VersionSelector (for selecting Versions)
+- DateTime (for selecting Dates for start or end date)
+- GlobalBrush (Drag and Resizable brush component for zooming into)
+- Charts (for displaying several charts with title, remove button, and custom child components)
+
+Usages:
+
+1) VersionSelector
+
+It will render a select box combo and an additional reset button to clear the selection.
+
+Takes the following props:
+- removeVersion - version id that should be removed from the selected versions
+- versions - array of object with "value" and "text" as properties. Value should be an ID and text is the display string for the selector
+- onChange - callback function that gets passed in an array of the current selection in the selector. structure see versions prop
+
+2) DateTime
+
+It will render a DateTimePicker component
+
+Takes the following props:
+- defaultValue - the default (preselected) date as moment object
+- timeFormat - boolean for wether showing a time selector
+- isValidDate - callback function to determine if a date can be selected or not
+- onChange - callback function the gets called when a new date was being selected. Function get the selected date as moment object passed in
+
+3) GlobalBrush
+
+Renders a brush component
+
+Takes the following props:
+- show - boolean flag wether the component should actually render
+- onBrushChange - callback function the gets called on changes on the brush. Function gets passed in start and end as dates.
+- viewPortDateRange - an object having the properties startDate and endDate containing dates. They deterine the maximum range of dates covered by the brush.
+
+
+4) Charts
+
+Renders multiple area chart components. Additionally renders a title, a delete/remove button, and passed in child components.
+
+The child components should consume two properties named "versionId" and "applicationId" which will be passed in by the charts component. Example:
+                        <Charts
+                            selectedVersions = {this.state.selectedVerions}
+                            onDelete = {this.handleRemoveVersion.bind(this)}
+                            dataSets = {this.state.versionsData}
+                            viewPortDateRange = {this.state.viewPortDateRange}
+                            applicationId = "kio"
+                        >
+                            <SomeComponent/>
+                            <SomeOtherComponent/>
+                        </Charts>
+
+
+Takes the following props
+- selectedVersions - array of object with "value" and "text" as properties. Value should be an ID of a version and text should be the name of a version. The name will be rendered as the title of the corresponding graph.
+- onDelete - callback function the gets called if a user clicks on the delete/remove button. Passed in parameter is a version id.
+- dataSets - a Map with version ids as keys and an object as value. the value object is supposed to have the two properties "label" and "values". Label is unused currently. values is an array of objects with "x" and "y" as properties. "X" depicting a point in time as a date and is the point on the x-axis in the graph. "Y" is a number depicting the point on the y-axis.
+- viewPortDateRange - an object having the properties startDate and endDate containing dates. They deterine the maximum range of dates as the x axis of the displayed graph.
+- applicationId - application ID as a string
+
