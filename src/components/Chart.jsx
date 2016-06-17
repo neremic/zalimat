@@ -11,6 +11,7 @@ class Chart extends React.Component {
         super(props);
         let { startDate, endDate } = props.viewPortDateRange;
         this.state = {
+            // magic numbers
             xScale: d3.time.scale().domain([startDate, endDate]).range([0, 400 - 70]),
         }
     }
@@ -28,8 +29,8 @@ class Chart extends React.Component {
                     width={this.props.width}
                     xScale={this.state.xScale}
                     interpolate="step-after"
-                    height={200}
-                    margin={{top: 10, bottom: 50, left: 50, right: 20}}
+                    height={200} {/* magic number :) why not taking this from props? */}
+                    margin={{top: 10, bottom: 50, left: 50, right: 20}} {/* magic numbers */}
                 />
             </div>
         );
@@ -37,6 +38,7 @@ class Chart extends React.Component {
 };
 
 Chart.propTypes = {
+    // would be cool to have the shape defined here
     dataSet: React.PropTypes.object,
     viewPortDateRange: React.PropTypes.shape({
         startDate: React.PropTypes.object,
