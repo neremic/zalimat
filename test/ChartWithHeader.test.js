@@ -25,9 +25,10 @@ describe('<ChartWithHeader />', () => {
 
         const wrapper = shallow(<ChartWithHeader {...testProps}/>);
         const labelNode = wrapper.find(Label);
+        const childNode = labelNode.childAt(0);
 
         expect(labelNode.length).toBe(1);
-        expect(labelNode.prop("children")).toBe(testProps.title);
+        expect(childNode.text()).toBe(testProps.title);
     });
 
     it('renders the `delete button` component', () => {

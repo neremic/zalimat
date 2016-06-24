@@ -156,20 +156,30 @@ describe('<Charts />', () => {
         };
 
         const wrapper = shallow(<Charts {...testProps}/>);
-        const chartNode = wrapper.childAt(0);
+        const chartNode1 = wrapper.childAt(0);
+        const chartNode2 = wrapper.childAt(1);
 
-        expect(wrapper.children().length).toBe(1);
-        expect(chartNode.type()).toBe(ChartWithHeader);
-        expect(chartNode.prop("viewPortDateRange")).toEqual(testProps.viewPortDateRange);
-        expect(chartNode.prop("dataSet")).toEqual(testProps.dataSets.get('id1'));
-        expect(chartNode.prop("title")).toBe('v1');
-        expect(chartNode.prop("versionId")).toBe('id1');
-        expect(chartNode.prop("applicationId")).toBe(testProps.applicationId);
-        expect(chartNode.prop("onDelete")).toEqual(testProps.onDelete);
-        expect(chartNode.prop("children")).toBe(undefined);
+        expect(wrapper.children().length).toBe(2);
+        expect(chartNode1.type()).toBe(ChartWithHeader);
+        expect(chartNode1.prop("viewPortDateRange")).toEqual(testProps.viewPortDateRange);
+        expect(chartNode1.prop("dataSet")).toEqual(testProps.dataSets.get('id1'));
+        expect(chartNode1.prop("title")).toBe('v1');
+        expect(chartNode1.prop("versionId")).toBe('id1');
+        expect(chartNode1.prop("applicationId")).toBe(testProps.applicationId);
+        expect(chartNode1.prop("onDelete")).toEqual(testProps.onDelete);
+        expect(chartNode1.prop("children")).toBe(undefined);
+
+        expect(chartNode2.type()).toBe(ChartWithHeader);
+        expect(chartNode2.prop("viewPortDateRange")).toEqual(testProps.viewPortDateRange);
+        expect(chartNode2.prop("dataSet")).toBe(undefined);
+        expect(chartNode2.prop("title")).toBe('v2');
+        expect(chartNode2.prop("versionId")).toBe('id2');
+        expect(chartNode2.prop("applicationId")).toBe(testProps.applicationId);
+        expect(chartNode2.prop("onDelete")).toEqual(testProps.onDelete);
+        expect(chartNode2.prop("children")).toBe(undefined);
     });
 
-    it('renders only matching versions data', () => {
+    it('renders the matching version with dataSet and renders non-matching version without dataSet', () => {
         const testProps = {
             selectedVersions : [{value: 'id1', text: 'v1'}, {value: 'id2', text: 'v2'}],
             onDelete : () => {},
@@ -206,6 +216,7 @@ describe('<Charts />', () => {
         expect(chartNode1.prop("versionId")).toBe('id1');
         expect(chartNode1.prop("title")).toBe('v1');
         expect(chartNode1.prop("onDelete")).toEqual(testProps.onDelete);
+
         expect(chartNode2.type()).toBe(ChartWithHeader);
         expect(chartNode2.prop("viewPortDateRange")).toEqual(testProps.viewPortDateRange);
         expect(chartNode2.prop("dataSet")).toEqual(testProps.dataSets.get('id2'));
@@ -215,7 +226,7 @@ describe('<Charts />', () => {
         expect(chartNode2.prop("onDelete")).toEqual(testProps.onDelete);
     });
 
-    it('renders the only matching version data and handles child components', () => {
+    it('renders the matching version with dataSet and renders non-matching version without dataSet and renders provided children', () => {
         const testProps = {
             selectedVersions : [{value: 'id1', text: 'v1'}, {value: 'id2', text: 'v2'}],
             onDelete : () => {},
@@ -241,21 +252,40 @@ describe('<Charts />', () => {
         };
 
         const wrapper = shallow(<Charts {...testProps}><DisplayApp someProp="propValue"/></Charts>);
-        const chartNode = wrapper.childAt(0);
-        const childNode = chartNode.childAt(0);
+        const chartNode1 = wrapper.childAt(0);
+        const childNode1 = chartNode1.childAt(0);
 
-        expect(wrapper.children().length).toBe(1);
-        expect(chartNode.type()).toBe(ChartWithHeader);
-        expect(chartNode.prop("viewPortDateRange")).toEqual(testProps.viewPortDateRange);
-        expect(chartNode.prop("dataSet")).toEqual(testProps.dataSets.get('id1'));
-        expect(chartNode.prop("title")).toBe('v1');
-        expect(chartNode.prop("versionId")).toBe('id1');
-        expect(chartNode.prop("applicationId")).toBe(testProps.applicationId);
-        expect(chartNode.prop("onDelete")).toEqual(testProps.onDelete);
+        const chartNode2 = wrapper.childAt(1);
+        const childNode2 = chartNode2.childAt(0);
 
-        expect(chartNode.prop("children")).toNotBe(null);
-        expect(childNode.type()).toBe(DisplayApp);
-        expect(childNode.prop("someProp")).toBe('propValue');
+        expect(wrapper.children().length).toBe(2);
+
+        expect(chartNode1.type()).toBe(ChartWithHeader);
+        expect(chartNode1.prop("viewPortDateRange")).toEqual(testProps.viewPortDateRange);
+        expect(chartNode1.prop("dataSet")).toEqual(testProps.dataSets.get('id1'));
+        expect(chartNode1.prop("title")).toBe('v1');
+        expect(chartNode1.prop("versionId")).toBe('id1');
+        expect(chartNode1.prop("applicationId")).toBe(testProps.applicationId);
+        expect(chartNode1.prop("onDelete")).toEqual(testProps.onDelete);
+
+        expect(chartNode1.children().length).toBe(1);
+        expect(chartNode1.prop("children")).toNotBe(null);
+        expect(childNode1.type()).toBe(DisplayApp);
+        expect(childNode1.prop("someProp")).toBe('propValue');
+
+        expect(chartNode2.type()).toBe(ChartWithHeader);
+        expect(chartNode2.prop("viewPortDateRange")).toEqual(testProps.viewPortDateRange);
+        expect(chartNode2.prop("dataSet")).toBe(undefined);
+        expect(chartNode2.prop("title")).toBe('v2');
+        expect(chartNode2.prop("versionId")).toBe('id2');
+        expect(chartNode2.prop("applicationId")).toBe(testProps.applicationId);
+        expect(chartNode2.prop("onDelete")).toEqual(testProps.onDelete);
+
+        expect(chartNode2.children().length).toBe(1);
+        expect(chartNode2.prop("children")).toNotBe(null);
+        expect(childNode2.type()).toBe(DisplayApp);
+        expect(childNode2.prop("someProp")).toBe('propValue');
+
     });
 
 });

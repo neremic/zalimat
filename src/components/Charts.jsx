@@ -11,10 +11,6 @@ class Charts extends React.Component {
             let {selectedVersions, dataSets, onDelete, viewPortDateRange, ...otherProps} = this.props;
 
             for (let i = 0; i < selectedVersions.length; i++) {
-                if (!dataSets.get(selectedVersions[i].value)) {
-                    continue;
-                };
-
                 let versionId = selectedVersions[i].value;
                 let versionTitle = selectedVersions[i].text;
 
@@ -35,7 +31,13 @@ class Charts extends React.Component {
         if (charts.length == 0) {
             return null;
         } else {
-            return (<div>{charts}</div>);
+            return (
+                <div
+                    style = {{overflow: "auto", maxHeight: "100vh"}}
+                >
+                    {charts}
+                </div>
+            );
         }
     }
 }

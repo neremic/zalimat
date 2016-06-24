@@ -1,16 +1,37 @@
 import * as types from '../actions/actionTypes';
 import initialState from './initialState';
 
-export default function applicationVersionReducer(state = initialState.versions, action) {
+export default function applicationVersionHistoryReducer(state = initialState.histories, action) {
     switch (action.type) {
-        case types.LOADED_VERSIONS:
-            console.log("LOADED_VERSIONS");
-            console.log("old state %O", state);
-            let newState = Object.assign({}, state, {versions:action.versions});
-            console.log("new state %O", newState);
-            return action.versions;
+        case types.LOADED_VERSION_HISTORY:
+            return state.set(action.versionId, transformResult(action.history));
+        case types.CLEAR_VERSION_HISTORY:
+            return state.set(action.versionId, action.history);
 
         default:
             return state;
     }
+}
+
+function transformResult(inHistory) {
+    let outHistory = {
+        label : '',
+        values : []
+    };
+
+    if (inHistory && inHistory.data) {
+        inHistory.data.forEach(entry => {
+            let xRaw = entry.change_date;
+            let y = entry.instances_count;
+            let x = Date.parse(xRaw);
+
+            outHistory.values.push({
+                    x,
+                    y
+                });
+            }
+        );
+    }
+
+    return outHistory;
 }

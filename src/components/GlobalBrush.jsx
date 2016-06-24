@@ -5,6 +5,8 @@ import React from 'react'
 import { Brush } from 'react-d3-components';
 import d3 from 'd3';
 
+import moment from 'moment';
+
 class GlobalBrush extends React.Component {
     constructor(props) {
         super(props);
@@ -35,13 +37,13 @@ class GlobalBrush extends React.Component {
             return (
                 <div className="brush" style={{float: 'none'}}>
                     <Brush
+                        disabled = {true}
                         width={this.props.width}
                         height={50}
                         margin={{top: 0, bottom: 30, left: 50, right: 20}}
                         xScale={this.state.xScaleBrush}
                         extent={[this.props.viewPortDateRange.startDate, this.props.viewPortDateRange.endDate]}
                         onChange={this.handleChange}
-                        xAxis={{tickValues: this.state.xScaleBrush.ticks(d3.time.days, 1), tickFormat: d3.time.format("%m/%d")}}
                     />
                 </div>
             )

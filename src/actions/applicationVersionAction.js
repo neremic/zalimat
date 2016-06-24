@@ -1,6 +1,6 @@
 import * as types from './actionTypes';
 import Api from '../api/Api';
-import {beginAjaxCall, ajaxCallError} from './ajaxStatusActions';
+import {ajaxCallError,beginLoadingVersions} from './ajaxStatusActions';
 
 export function loadedApplicationVersions(versions) {
     return { type: types.LOADED_VERSIONS, versions};
@@ -8,9 +8,8 @@ export function loadedApplicationVersions(versions) {
 
 export function loadApplicationVersions() {
     return function(dispatch) {
-        //dispatch(beginAjaxCall());
-        return Api.getApplicationVersions().then(versions => {
-            console.log("loadedVersions %O", versions);
+        dispatch(beginLoadingVersions());
+        return Api.getApplicationVersions('kio').then(versions => {
             dispatch(loadedApplicationVersions(versions));
         }).catch(error => {
             throw(error);

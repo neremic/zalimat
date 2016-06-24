@@ -44,7 +44,7 @@ describe('<GlobalBrush />', () => {
         expect(brushNode.prop("yScale")).toBe(null);
         expect(brushNode.prop("extent")).toEqual([testProps.viewPortDateRange.startDate, testProps.viewPortDateRange.endDate]);
         expect(brushNode.prop("onChange")).toNotBe(undefined);
-        expect(brushNode.prop("xAxis")).toNotBe(undefined);
+        expect(brushNode.prop("xAxis")).toBe(undefined);
     });
 
     it('does not render a `GlobalBrush` component', () => {

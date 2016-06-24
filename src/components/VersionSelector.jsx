@@ -51,8 +51,10 @@ class VersionSelector extends React.Component {
                         textField = 'text'
                         value = {this.state.values}
                         data = {this.props.versions}
-                        onChange = {this.handleSelect}>
-                    </Multiselect>
+                        onChange = {this.handleSelect}
+                        busy = {this.props.isLoading}
+                        disabled = {this.props.isLoading}
+                    />
                     <Button
                         bsStyle = "primary" bsSize="xsmall"
                         onClick = {this.handleReset}>

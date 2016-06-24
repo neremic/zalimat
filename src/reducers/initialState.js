@@ -1,5 +1,10 @@
+import Immutable from 'immutable';
+
 export default {
-  authors: [],
-  courses: [],
-  ajaxCallsInProgress: 0
+  versions: [],
+  histories: Immutable.Map(),
+  ajaxCallsInProgress: {
+      versionsCallsPending : 0,
+      versionHistoriesCallsPending : 0
+  }
 };

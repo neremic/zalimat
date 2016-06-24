@@ -38,6 +38,38 @@ class ChartWithHeader extends React.Component{
             }
         );
 
+        let chartAndOrLoader = [];
+
+        if (!dataSet) {
+            chartAndOrLoader.push(
+                <h1 key = 'h1loading'
+                    style = {{height : "200px"}}
+                >
+                    Loading...
+                </h1>
+            );
+        } else if (dataSet && dataSet.values.length == 0) {
+            chartAndOrLoader.push(
+                <h1 key = 'h1laodingnewdata'
+                    style = {{height : "200px"}}
+                >
+                    Loading new data...
+                </h1>
+            );
+        } else if (dataSet && dataSet.values.length > 0) {
+            chartAndOrLoader.push(
+                <AutoWidth
+                    className="responsive"
+                    key = 'autowidth-key'
+                >
+                    <Chart
+                        dataSet = {dataSet}
+                        viewPortDateRange = {viewPortDateRange}
+                    />
+                </AutoWidth>
+            );
+        }
+
         return (
             <Row className="show-grid">
                 <Col md={12}>
@@ -46,19 +78,14 @@ class ChartWithHeader extends React.Component{
                         <h2>
                             <Label bsStyle="success">
                                 {title}
+                                <Button
+                                    bsStyle="danger" bsSize="xsmall"
+                                    onClick = {this.handleDeleteThisChart}>
+                                    X
+                                </Button>
                             </Label>
                         </h2>
-                        <Button
-                            bsStyle="danger" bsSize="xsmall"
-                            onClick = {this.handleDeleteThisChart}>
-                            X
-                        </Button>
-                        <AutoWidth className="responsive">
-                            <Chart
-                                dataSet = {dataSet}
-                                viewPortDateRange = {viewPortDateRange}
-                            />
-                        </AutoWidth>
+                        {chartAndOrLoader}
                         {childrenWithProps}
                     </Panel>
                 </Col>
