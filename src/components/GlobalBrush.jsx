@@ -7,12 +7,18 @@ import d3 from 'd3';
 
 import moment from 'moment';
 
+const BRUSH_HEIGHT = 50;
+const BRUSH_MARGIN = {top: 0, bottom: 30, left: 50, right: 20};
+const BRUSH_HORIZONTAL_MARGIN = BRUSH_MARGIN.left + BRUSH_MARGIN.right;
+const BRUSH_STYLE = {float: 'none'};
+
 class GlobalBrush extends React.Component {
     constructor(props) {
         super(props);
+
         let { startDate, endDate } = props.viewPortDateRange;
         this.state = {
-            xScaleBrush: d3.time.scale().domain([startDate, endDate]).range([0, 400 - 70]),
+            xScaleBrush: undefined,
             xstartDate: startDate
         };
         this.handleChange = this.handleChange.bind(this);
@@ -26,7 +32,7 @@ class GlobalBrush extends React.Component {
         let {startDate, endDate} = nextProps.viewPortDateRange;
         if (nextProps.width != this.props.width || this.state.xstartDate != startDate) {
             this.setState({
-                xScaleBrush: d3.time.scale().domain([startDate, endDate]).range([0, nextProps.width - 70]),
+                xScaleBrush: d3.time.scale().domain([startDate, endDate]).range([0, nextProps.width - BRUSH_HORIZONTAL_MARGIN]),
                 xstartDate: startDate
             });
         }
@@ -35,15 +41,14 @@ class GlobalBrush extends React.Component {
     render() {
         if (this.props.show) {
             return (
-                <div className="brush" style={{float: 'none'}}>
+                <div className="brush" style={BRUSH_STYLE}>
                     <Brush
-                        disabled = {true}
-                        width={this.props.width}
-                        height={50}
-                        margin={{top: 0, bottom: 30, left: 50, right: 20}}
-                        xScale={this.state.xScaleBrush}
-                        extent={[this.props.viewPortDateRange.startDate, this.props.viewPortDateRange.endDate]}
-                        onChange={this.handleChange}
+                        width = {this.props.width}
+                        height = {BRUSH_HEIGHT}
+                        margin = {BRUSH_MARGIN}
+                        xScale = {this.state.xScaleBrush}
+                        extent = {[this.props.viewPortDateRange.startDate, this.props.viewPortDateRange.endDate]}
+                        onChange = {this.handleChange}
                     />
                 </div>
             )

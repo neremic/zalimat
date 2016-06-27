@@ -4,7 +4,7 @@ import React from 'react';
 var createFragment = require('react-addons-create-fragment');
 
 import Charts from '../src/components/Charts.jsx'
-import DisplayApp from '../src/components/DisplayApp.jsx'
+import { DisplayApp } from './components/DisplayApp.jsx'
 import ChartWithHeader from '../src/components/ChartWithHeader.jsx'
 
 import moment from 'moment';

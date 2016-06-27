@@ -4,15 +4,17 @@ import React from 'react';
 
 import ChartWithHeader from './ChartWithHeader';
 
+const DIV_STYLE = {overflow: "auto", maxHeight: "100vh"};
+
 class Charts extends React.Component {
     render() {
         var charts = [];
         if (this.props.selectedVersions !== undefined && this.props.dataSets !== undefined) {
-            let {selectedVersions, dataSets, onDelete, viewPortDateRange, ...otherProps} = this.props;
+            const {selectedVersions, dataSets, onDelete, viewPortDateRange, ...otherProps} = this.props;
 
             for (let i = 0; i < selectedVersions.length; i++) {
-                let versionId = selectedVersions[i].value;
-                let versionTitle = selectedVersions[i].text;
+                const versionId = selectedVersions[i].value;
+                const versionTitle = selectedVersions[i].text;
 
                 charts.push(
                     <ChartWithHeader
@@ -32,9 +34,7 @@ class Charts extends React.Component {
             return null;
         } else {
             return (
-                <div
-                    style = {{overflow: "auto", maxHeight: "100vh"}}
-                >
+                <div style = {DIV_STYLE}>
                     {charts}
                 </div>
             );

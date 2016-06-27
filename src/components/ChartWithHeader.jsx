@@ -24,7 +24,7 @@ class ChartWithHeader extends React.Component{
     }
 
     render() {
-        let {title, dataSet, viewPortDateRange, applicationId, versionId, children} = this.props;
+        const {title, dataSet, viewPortDateRange, applicationId, versionId, children} = this.props;
 
         let childrenWithProps = [];
         const childWithProps = React.Children.map(this.props.children,
@@ -43,8 +43,7 @@ class ChartWithHeader extends React.Component{
         if (!dataSet) {
             chartAndOrLoader.push(
                 <h1 key = 'h1loading'
-                    style = {{height : "200px"}}
-                >
+                    style = {{height : "200px"}}>
                     Loading...
                 </h1>
             );

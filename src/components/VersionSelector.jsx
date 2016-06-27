@@ -11,10 +11,12 @@ import Col from 'react-bootstrap/lib/Col';
 class VersionSelector extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
             values: [],
             lastRemovedVersion: undefined
         }
+
         this.handleSelect = this.handleSelect.bind(this);
         this.handleReset = this.handleReset.bind(this);
     }

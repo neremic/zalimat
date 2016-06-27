@@ -25,7 +25,7 @@ export function loadVersionHistory(applicationId, versionId, startDate, endDate,
     return function(dispatch) {
         dispatch(performClearVersionHistory(versionId));
         dispatch(beginLoadingVersionHistory());
-        return Api.fetchHistory(applicationId, versionId, startDate, endDate).then(history => {
+        return Api.fetchHistory(applicationId, versionId, startDate.toISOString(), endDate.toISOString()).then(history => {
             dispatch(loadedVersionHistory(versionId, history));
         }).catch(error => {
             throw(error);

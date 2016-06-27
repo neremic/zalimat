@@ -15,15 +15,17 @@ import moment from 'moment';
 import AutoWidth from '@zalando/react-automatic-width';
 
 import Charts from '../../Charts';
-import DisplayApp from '../../DisplayApp';
-import DisplayAppAndVersion from '../../DisplayAppAndVersion';
 import GlobalBrush from '../../GlobalBrush';
 import VersionSelector from '../../VersionSelector'
 import DateSelector from '../../DateSelector'
 
+import 'react-widgets/lib/less/react-widgets.less'
+import '../styles/react-datetime.css'
+
 class LifeCycleCharts extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
             applicationId : 'kio',
             versionToBeRemoved : undefined,
@@ -32,9 +34,9 @@ class LifeCycleCharts extends React.Component {
             viewPortDateRange : {
                 startDate : moment().subtract(1, "days").toDate(),
                 endDate : new Date(Date.now())
-            },
-            xScaleBrush: d3.time.scale().domain([moment().subtract(1, "days").toDate(), new Date(Date.now())]).range([0, 400 - 70])
+            }
         };
+
         this.handleDatePicked = this.handleDatePicked.bind(this);
         this.handleVersionSelected = this.handleVersionSelected.bind(this);
         this.handleBrushChanged = this.handleBrushChanged.bind(this);
@@ -78,8 +80,8 @@ class LifeCycleCharts extends React.Component {
         this.props.actions.loadVersionHistories(
             applicationId,
             versions,
-            startDate.toISOString(),
-            endDate.toISOString()
+            startDate,
+            endDate
         );
     }
 
@@ -96,12 +98,6 @@ class LifeCycleCharts extends React.Component {
                 endDate : new Date(Date.now())
             }
         });
-    }
-
-    isValidDate(currentDate, selectedDate) {
-        let now = moment();
-        let diff = now.diff(currentDate, 'days');
-        return diff > 0;
     }
 
     render() {
@@ -143,10 +139,7 @@ class LifeCycleCharts extends React.Component {
                             dataSets = {this.props.versionsHistory}
                             viewPortDateRange = {this.state.viewPortDateRange}
                             applicationId = {this.state.applicationId}
-                        >
-                            <DisplayApp/>
-                            <DisplayAppAndVersion/>
-                        </Charts>
+                        />
                     </Col>
                 </Row>
             </Grid>

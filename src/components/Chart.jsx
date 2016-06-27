@@ -6,30 +6,32 @@ import d3 from 'd3';
 
 import { AreaChart } from 'react-d3-components';
 
+const MARGINS = {top: 10, bottom: 50, left: 50, right: 20};
+const CHART_HEIGHT = 200;
+const CHART_INTERPOLATION = 'step-after';
+const CHART_HORIZONTAL_MARGINS = MARGINS.left + MARGINS.right;
+
 class Chart extends React.Component {
     constructor(props) {
         super(props);
-        let { startDate, endDate } = props.viewPortDateRange;
-        this.state = {
-            xScale: d3.time.scale().domain([startDate, endDate]).range([0, 400 - 70]),
-        }
+        this.state = ({xScale : undefined});
     }
 
     componentWillReceiveProps(nextProps) {
-        let { startDate, endDate } = nextProps.viewPortDateRange;
-        this.setState({xScale: d3.time.scale().domain([startDate, endDate]).range([0, nextProps.width - 70])});
+        const { startDate, endDate } = nextProps.viewPortDateRange;
+        this.setState({xScale: d3.time.scale().domain([startDate, endDate]).range([0, nextProps.width - CHART_HORIZONTAL_MARGINS])});
     }
 
     render() {
         return (
             <div>
                 <AreaChart
-                    data={this.props.dataSet}
-                    width={this.props.width}
-                    xScale={this.state.xScale}
-                    interpolate="step-after"
-                    height={200}
-                    margin={{top: 10, bottom: 50, left: 50, right: 20}}
+                    data = {this.props.dataSet}
+                    width = {this.props.width}
+                    xScale = {this.state.xScale}
+                    interpolate = {CHART_INTERPOLATION}
+                    height = {CHART_HEIGHT}
+                    margin = {MARGINS}
                 />
             </div>
         );
@@ -37,11 +39,11 @@ class Chart extends React.Component {
 };
 
 Chart.propTypes = {
-    dataSet: React.PropTypes.object,
+    dataSet: React.PropTypes.object.isRequired,
     viewPortDateRange: React.PropTypes.shape({
         startDate: React.PropTypes.object,
         endDate: React.PropTypes.object
-    })
+    }).isRequired
 };
 
 export default Chart;

@@ -9,17 +9,18 @@ import moment from 'moment';
 
 import { shallow } from 'enzyme';
 import expect from 'expect';
+import d3 from 'd3';
 
 describe('<Chart />', () => {
 
-    it('renders an `Chart` component', () => {
+    it('renders a `Chart` component', () => {
+        const startDate = moment().subtract(1, "days").toDate();
+        const endDate = new Date(Date.now());
         const testProps = {
-            viewPortDateRange : {
-                startDate : moment().subtract(1, "days").toDate(),
-                endDate : new Date(Date.now())
-            },
+            viewPortDateRange : {startDate, endDate},
             dataSet : createRandomData(),
-            width : 1024
+            width : 1024,
+            xScale: d3.time.scale().domain([startDate, endDate]).range([0, 400])
         }
 
         function createRandomData() {
@@ -50,7 +51,7 @@ describe('<Chart />', () => {
 
         expect(areaChartNode.prop("width")).toBe(1024);
         expect(areaChartNode.prop("margin")).toEqual({ top: 10, bottom: 50, left: 50, right: 20 });
-        expect(areaChartNode.prop("xScale")).toBe(wrapper.state("xScale"));
+        expect(areaChartNode.prop("xScale")).toBe(null);
         expect(areaChartNode.prop("yScale")).toBe(null);
         expect(areaChartNode.prop("interpolate")).toBe('step-after');
     });
