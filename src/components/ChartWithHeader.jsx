@@ -17,6 +17,9 @@ class ChartWithHeader extends React.Component{
         super(props);
 
         // this is a bit weird, you can just bind when you're using it
+        // RE: I follow the guidence from official docs for react.
+        // There it is stated
+        // "We recommend that you bind your event handlers in the constructor so they are only bound once for every instance:"
         this.handleDeleteThisChart = this.handleDeleteThisChart.bind(this);
     }
 
@@ -33,6 +36,8 @@ class ChartWithHeader extends React.Component{
                 let clonedChild = React.cloneElement(child, {
                     // use string interpolation to make clear that these are not numbers
                     // eg `${applicationId}${versionId}${index}`
+                    // RE: Will do so. Just happend to stumple of string interpolation - or templating as it is called -
+                    // as of last weekend :)
                     key: applicationId + versionId + index,
                     applicationId: applicationId,
                     versionId: versionId

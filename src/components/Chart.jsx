@@ -12,6 +12,7 @@ class Chart extends React.Component {
         let { startDate, endDate } = props.viewPortDateRange;
         this.state = {
             // magic numbers
+            // RE: You are correct. This will be refactored but wasnt put on my high prio list for first overview.
             xScale: d3.time.scale().domain([startDate, endDate]).range([0, 400 - 70]),
         }
     }

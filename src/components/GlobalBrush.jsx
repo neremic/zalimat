@@ -37,13 +37,13 @@ class GlobalBrush extends React.Component {
                 <div className="brush" style={{float: 'none'}}>
                     <Brush
                         width={this.props.width}
-                        {/* magic numbers ✨🎩✨ */} 
+                        {/* magic numbers ✨🎩✨ */}
                         height={50}
                         margin={{top: 0, bottom: 30, left: 50, right: 20}}
                         xScale={this.state.xScaleBrush}
                         extent={[this.props.viewPortDateRange.startDate, this.props.viewPortDateRange.endDate]}
                         onChange={this.handleChange}
-                        {/* make ticks configurable or dynamic */} 
+                        {/* make ticks configurable or dynamic */}
                         xAxis={{tickValues: this.state.xScaleBrush.ticks(d3.time.days, 1), tickFormat: d3.time.format("%m/%d")}}
                     />
                 </div>
@@ -57,6 +57,7 @@ class GlobalBrush extends React.Component {
 GlobalBrush.propTypes = {
     show: React.PropTypes.bool,
     // shape! 🎉
+    // RE: good or bad?
     viewPortDateRange: React.PropTypes.shape({
         startDate: React.PropTypes.object,
         endDate: React.PropTypes.object

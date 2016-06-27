@@ -16,6 +16,8 @@ class Charts extends React.Component {
                 };
 
                 // i think for versions only a string is sufficient
+                // RE: That is correct. This very state you observed here was work in progress
+                // 
                 let versionId = selectedVersions[i].value;
                 let versionTitle = selectedVersions[i].text;
 
