@@ -117,14 +117,13 @@ class LifeCycleCharts extends React.Component {
                             isLoading = {this.props.ajaxStatus.versionsCallsPending > 0}
                         />
                     </Col>
-                    <Col md={4}>
-                        <DateSelector
-                            datePicked = {this.handleDatePicked}
-                        />
-                    </Col>
                 </Row>
                 <Row className="show-grid">
                     <Col md={12}>
+                        <DateSelector
+                            datePicked = {this.handleDatePicked}
+                            title = 'St'
+                        />
                         <AutoWidth className="responsive">
                             <GlobalBrush
                                 show = {this.state.selectedVerions.length > 0}
@@ -133,6 +132,10 @@ class LifeCycleCharts extends React.Component {
                                 height = {BRUSH_HEIGHT}
                             />
                         </AutoWidth>
+                        <DateSelector
+                            datePicked = {this.handleDatePicked}
+                            title = 'E'
+                        />
                     </Col>
                 </Row>
                 <Row className="show-grid">

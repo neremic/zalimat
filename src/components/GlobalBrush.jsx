@@ -58,12 +58,12 @@ class GlobalBrush extends React.Component {
 }
 
 GlobalBrush.propTypes = {
-    show: React.PropTypes.bool,
+    show: React.PropTypes.bool.isRequired,
     viewPortDateRange: React.PropTypes.shape({
-        startDate: React.PropTypes.object,
-        endDate: React.PropTypes.object
-    }),
-    onBrushChange: React.PropTypes.func
+        startDate: React.PropTypes.instanceOf(Date),
+        endDate: React.PropTypes.instanceOf(Date)
+    }).isRequired,
+    onBrushChange: React.PropTypes.func.isRequired
 };
 
 export default GlobalBrush;

@@ -61,16 +61,21 @@ paths:
                 type: string
                 description: ID of the version's application
                 example: kio
-              change_date:
-                type: string
-                format: date-time
-                description: Point in time when the instance count of the version changed.
-                example: '2015-04-25T16:25:00.000Z'
-              instances_count:
-                type: integer
-                format: int32
-                description: amount of instances at the gi
-                example: 4
+              data:
+                type: array
+                items:
+                   type: object
+                   properties:
+                     change_date:
+                       type: string
+                       format: date-time
+                       description: Point in time when the instance count of the version changed.
+                       example: '2015-04-25T16:25:00.000Z'
+                     instance_count:
+                       type: integer
+                       format: int32
+                       description: amount of instances at the gi
+                       example: 4
 
         404:
           description: Not found e.g. no valid application ID or version ID or both

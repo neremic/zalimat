@@ -30,7 +30,7 @@ class ChartWithHeader extends React.Component{
         const childWithProps = React.Children.map(this.props.children,
             (child, index) => {
                 let clonedChild = React.cloneElement(child, {
-                    key: applicationId + versionId + index,
+                    key: `${applicationId}${versionId}${index}`,
                     applicationId: applicationId,
                     versionId: versionId
                 });
@@ -50,8 +50,7 @@ class ChartWithHeader extends React.Component{
         } else if (dataSet && dataSet.values.length == 0) {
             chartAndOrLoader.push(
                 <h1 key = 'h1laodingnewdata'
-                    style = {{height : "200px"}}
-                >
+                    style = {{height : "200px"}}>
                     Loading new data...
                 </h1>
             );
@@ -59,8 +58,7 @@ class ChartWithHeader extends React.Component{
             chartAndOrLoader.push(
                 <AutoWidth
                     className="responsive"
-                    key = 'autowidth-key'
-                >
+                    key = 'autowidth-key'>
                     <Chart
                         dataSet = {dataSet}
                         viewPortDateRange = {viewPortDateRange}

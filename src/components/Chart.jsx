@@ -38,7 +38,15 @@ class Chart extends React.Component {
 };
 
 Chart.propTypes = {
-    dataSet: React.PropTypes.object.isRequired,
+    dataSet: React.PropTypes.shape({
+        label: React.PropTypes.string,
+        values: React.PropTypes.arrayOf(
+            React.PropTypes.shape({
+                x: React.PropTypes.instanceOf(Date),
+                y: React.PropTypes.number
+            })
+        )
+    }).isRequired,
     viewPortDateRange: React.PropTypes.shape({
         startDate: React.PropTypes.object,
         endDate: React.PropTypes.object

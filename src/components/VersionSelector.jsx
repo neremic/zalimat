@@ -70,8 +70,11 @@ class VersionSelector extends React.Component {
 
 VersionSelector.propTypes = {
     removeVersion: React.PropTypes.string,
-    versions: React.PropTypes.array,
-    onChange: React.PropTypes.func
+    versions: React.PropTypes.arrayOf(React.PropTypes.shape({
+        text: React.PropTypes.string,
+        value: React.PropTypes.string
+    })).isRequired,
+    onChange: React.PropTypes.func.isRequired
 };
 
 export default VersionSelector;

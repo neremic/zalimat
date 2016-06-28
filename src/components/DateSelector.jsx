@@ -57,7 +57,7 @@ class DateSelector extends React.Component {
                 <Button
                     bsStyle = "primary" bsSize="xsmall"
                     onClick = {this.handleButtonClick}>
-                    S
+                    {this.props.title}
                 </Button>
                 {dateFieldComponent}
             </div>
@@ -65,5 +65,11 @@ class DateSelector extends React.Component {
     }
 
 }
+
+
+DateSelector.propTypes = {
+    title: React.PropTypes.string,
+    datePicked: React.PropTypes.func.isRequired
+};
 
 export default DateSelector;
