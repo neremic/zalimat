@@ -21,7 +21,7 @@ export function performClearVersionHistory(versionId) {
     };
 }
 
-export function loadVersionHistory(applicationId, versionId, startDate, endDate, clearVersionHistory) {
+export function loadVersionHistory(applicationId, versionId, startDate, endDate) {
     return function(dispatch) {
         dispatch(performClearVersionHistory(versionId));
         dispatch(beginLoadingVersionHistory());
@@ -33,7 +33,7 @@ export function loadVersionHistory(applicationId, versionId, startDate, endDate,
     };
 }
 
-export function loadVersionHistories(applicationId, versions, startDate, endDate, clearVersionHistory) {
+export function loadVersionHistories(applicationId, versions, startDate, endDate) {
     return function(dispatch) {
         versions.forEach(version => {
             let versionId = version.value;

@@ -20,7 +20,10 @@ import VersionSelector from '../../VersionSelector'
 import DateSelector from '../../DateSelector'
 
 import 'react-widgets/lib/less/react-widgets.less'
-import '../styles/react-datetime.css'
+import '../../../styles/react-datetime.css'
+
+const BRUSH_HEIGHT = 50;
+const CHART_HEIGHT = 200;
 
 class LifeCycleCharts extends React.Component {
     constructor(props) {
@@ -127,6 +130,7 @@ class LifeCycleCharts extends React.Component {
                                 show = {this.state.selectedVerions.length > 0}
                                 onBrushChange = {this.handleBrushChanged}
                                 viewPortDateRange = {this.state.viewPortDateRange}
+                                height = {BRUSH_HEIGHT}
                             />
                         </AutoWidth>
                     </Col>
@@ -139,6 +143,7 @@ class LifeCycleCharts extends React.Component {
                             dataSets = {this.props.versionsHistory}
                             viewPortDateRange = {this.state.viewPortDateRange}
                             applicationId = {this.state.applicationId}
+                            height = {CHART_HEIGHT}
                         />
                     </Col>
                 </Row>

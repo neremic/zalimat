@@ -7,7 +7,6 @@ import d3 from 'd3';
 
 import moment from 'moment';
 
-const BRUSH_HEIGHT = 50;
 const BRUSH_MARGIN = {top: 0, bottom: 30, left: 50, right: 20};
 const BRUSH_HORIZONTAL_MARGIN = BRUSH_MARGIN.left + BRUSH_MARGIN.right;
 const BRUSH_STYLE = {float: 'none'};
@@ -44,7 +43,7 @@ class GlobalBrush extends React.Component {
                 <div className="brush" style={BRUSH_STYLE}>
                     <Brush
                         width = {this.props.width}
-                        height = {BRUSH_HEIGHT}
+                        height = {this.props.height}
                         margin = {BRUSH_MARGIN}
                         xScale = {this.state.xScaleBrush}
                         extent = {[this.props.viewPortDateRange.startDate, this.props.viewPortDateRange.endDate]}

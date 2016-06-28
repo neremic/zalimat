@@ -24,7 +24,7 @@ class ChartWithHeader extends React.Component{
     }
 
     render() {
-        const {title, dataSet, viewPortDateRange, applicationId, versionId, children} = this.props;
+        const {title, dataSet, viewPortDateRange, applicationId, versionId, height, children} = this.props;
 
         let childrenWithProps = [];
         const childWithProps = React.Children.map(this.props.children,
@@ -64,6 +64,7 @@ class ChartWithHeader extends React.Component{
                     <Chart
                         dataSet = {dataSet}
                         viewPortDateRange = {viewPortDateRange}
+                        height = {height}
                     />
                 </AutoWidth>
             );

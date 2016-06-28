@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import VersionSelector from '../src/components/VersionSelector.jsx'
+import VersionSelector from '../../src/components/VersionSelector.jsx'
 
 import Multiselect from 'react-widgets/lib/Multiselect'
 import Button from 'react-bootstrap/lib/Button';

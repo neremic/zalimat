@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import Chart from '../src/components/Chart.jsx'
+import Chart from '../../src/components/Chart.jsx'
 import { AreaChart } from 'react-d3-components';
 
 import moment from 'moment';
@@ -20,7 +20,8 @@ describe('<Chart />', () => {
             viewPortDateRange : {startDate, endDate},
             dataSet : createRandomData(),
             width : 1024,
-            xScale: d3.time.scale().domain([startDate, endDate]).range([0, 400])
+            xScale: d3.time.scale().domain([startDate, endDate]).range([0, 400]),
+            height : 200
         }
 
         function createRandomData() {
@@ -49,7 +50,8 @@ describe('<Chart />', () => {
         const areaChartNode = outerDivNode.childAt(0);
         expect(areaChartNode.type()).toBe(AreaChart);
 
-        expect(areaChartNode.prop("width")).toBe(1024);
+        expect(areaChartNode.prop("width")).toBe(testProps.width);
+        expect(areaChartNode.prop("height")).toBe(testProps.height);
         expect(areaChartNode.prop("margin")).toEqual({ top: 10, bottom: 50, left: 50, right: 20 });
         expect(areaChartNode.prop("xScale")).toBe(null);
         expect(areaChartNode.prop("yScale")).toBe(null);

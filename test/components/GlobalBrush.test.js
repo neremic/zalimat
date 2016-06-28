@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import GlobalBrush from '../src/components/GlobalBrush.jsx'
+import GlobalBrush from '../../src/components/GlobalBrush.jsx'
 import { Brush } from 'react-d3-components';
 
 import moment from 'moment';
@@ -20,7 +20,8 @@ describe('<GlobalBrush />', () => {
                 endDate : new Date(Date.now())
             },
             onBrushChange : function() {return},
-            width : 1024
+            width : 1024,
+            height : 50
         }
 
         const wrapper = shallow(<GlobalBrush {...testProps}/>);
@@ -38,9 +39,10 @@ describe('<GlobalBrush />', () => {
         const brushNode = outerDivNode.childAt(0);
         expect(brushNode.type()).toBe(Brush);
 
-        expect(brushNode.prop("width")).toBe(1024);
+        expect(brushNode.prop("width")).toBe(testProps.width);
+        expect(brushNode.prop("height")).toBe(testProps.height);
         expect(brushNode.prop("margin")).toEqual({ top: 0, bottom: 30, left: 50, right: 20 });
-        expect(brushNode.prop("xScale")).toBe(wrapper.state("xScaleBrush"));
+        expect(brushNode.prop("xScale")).toBe(null);
         expect(brushNode.prop("yScale")).toBe(null);
         expect(brushNode.prop("extent")).toEqual([testProps.viewPortDateRange.startDate, testProps.viewPortDateRange.endDate]);
         expect(brushNode.prop("onChange")).toNotBe(undefined);

@@ -7,7 +7,6 @@ import d3 from 'd3';
 import { AreaChart } from 'react-d3-components';
 
 const MARGINS = {top: 10, bottom: 50, left: 50, right: 20};
-const CHART_HEIGHT = 200;
 const CHART_INTERPOLATION = 'step-after';
 const CHART_HORIZONTAL_MARGINS = MARGINS.left + MARGINS.right;
 
@@ -30,7 +29,7 @@ class Chart extends React.Component {
                     width = {this.props.width}
                     xScale = {this.state.xScale}
                     interpolate = {CHART_INTERPOLATION}
-                    height = {CHART_HEIGHT}
+                    height = {this.props.height}
                     margin = {MARGINS}
                 />
             </div>
