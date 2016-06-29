@@ -4,13 +4,8 @@ import React from 'react'
 
 import Chart from './Chart.jsx'
 
-import Row from 'react-bootstrap/lib/Row';
-import Col from 'react-bootstrap/lib/Col';
-import Panel from 'react-bootstrap/lib/Panel';
 import Label from 'react-bootstrap/lib/Label';
 import Button from 'react-bootstrap/lib/Button';
-
-import AutoWidth from '@zalando/react-automatic-width';
 
 class ChartWithHeader extends React.Component{
     constructor(props){
@@ -56,38 +51,31 @@ class ChartWithHeader extends React.Component{
             );
         } else if (dataSet && dataSet.values.length > 0) {
             chartAndOrLoader.push(
-                <AutoWidth
-                    className="responsive"
-                    key = 'autowidth-key'>
+                <div style = {{flex: "auto"}} key = 'chart-key'>
                     <Chart
                         dataSet = {dataSet}
                         viewPortDateRange = {viewPortDateRange}
                         height = {height}
                     />
-                </AutoWidth>
+                </div>
             );
         }
 
         return (
-            <Row className="show-grid">
-                <Col md={12}>
-                    <Panel>
-                        <hr/>
-                        <h2>
-                            <Label bsStyle="success">
-                                {title}
-                                <Button
-                                    bsStyle="danger" bsSize="xsmall"
-                                    onClick = {this.handleDeleteThisChart}>
-                                    X
-                                </Button>
-                            </Label>
-                        </h2>
-                        {chartAndOrLoader}
-                        {childrenWithProps}
-                    </Panel>
-                </Col>
-            </Row>
+            <div style={{display: "flex"}}>
+                <h2>
+                    <Label bsStyle="success">
+                        {title}
+                        <Button
+                            bsStyle="danger" bsSize="xsmall"
+                            onClick = {this.handleDeleteThisChart}>
+                            X
+                        </Button>
+                    </Label>
+                </h2>
+                {chartAndOrLoader}
+                {childrenWithProps}
+            </div>
         )
     }
 }

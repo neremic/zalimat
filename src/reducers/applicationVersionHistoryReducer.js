@@ -21,9 +21,9 @@ function transformResult(inHistory) {
 
     if (inHistory && inHistory.data) {
         inHistory.data.forEach(entry => {
-            let xRaw = entry.change_date;
-            let y = entry.instances_count;
-            let x = Date.parse(xRaw);
+            const xRaw = entry.change_date;
+            const y = entry.instances_count;
+            const x = new Date(Date.parse(xRaw));
 
             outHistory.values.push({
                     x,

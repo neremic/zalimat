@@ -7,7 +7,7 @@ import { AreaChart } from 'react-d3-components';
 
 import moment from 'moment';
 
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import expect from 'expect';
 import d3 from 'd3';
 
@@ -17,12 +17,15 @@ describe('<Chart />', () => {
         const startDate = moment().subtract(1, "days").toDate();
         const endDate = new Date(Date.now());
         const testProps = {
-            viewPortDateRange : {startDate, endDate},
-            dataSet : createRandomData(),
-            width : 1024,
+            viewPortDateRange: {startDate, endDate},
+            dataSet: createRandomData(),
             xScale: d3.time.scale().domain([startDate, endDate]).range([0, 400]),
-            height : 200
-        }
+            height: 200
+        };
+        const testState = {
+            containerWidth: 1000,
+            containerHeight: 1000
+        };
 
         function createRandomData() {
             const oneHour = 3600000;
@@ -37,23 +40,16 @@ describe('<Chart />', () => {
             return data;
         };
 
-        const wrapper = shallow(<Chart {...testProps}/>);
+        const wrapper = mount(<Chart {...testProps}/>);
+        wrapper.setState(testState);
+        const areaChartNode = wrapper.find(AreaChart);
 
-        const outerDivNode = wrapper.find('div');
-        expect(outerDivNode.length).toBe(1);
-
-        expect(outerDivNode.prop('width')).toBe(undefined);
-
-        const childNodes = outerDivNode.children;
-        expect(childNodes.length).toBe(1);
-
-        const areaChartNode = outerDivNode.childAt(0);
+        expect(areaChartNode.length).toBe(1);
         expect(areaChartNode.type()).toBe(AreaChart);
-
-        expect(areaChartNode.prop("width")).toBe(testProps.width);
+        expect(areaChartNode.prop("width")).toBe(testState.containerWidth);
         expect(areaChartNode.prop("height")).toBe(testProps.height);
         expect(areaChartNode.prop("margin")).toEqual({ top: 10, bottom: 50, left: 50, right: 20 });
-        expect(areaChartNode.prop("xScale")).toBe(null);
+        expect(areaChartNode.prop("xScale")).toNotBe(null);
         expect(areaChartNode.prop("yScale")).toBe(null);
         expect(areaChartNode.prop("interpolate")).toBe('step-after');
     });

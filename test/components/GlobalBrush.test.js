@@ -3,16 +3,20 @@
 import React from 'react';
 
 import GlobalBrush from '../../src/components/GlobalBrush.jsx'
-import { Brush } from 'react-d3-components';
 
 import moment from 'moment';
 
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import expect from 'expect';
 
 describe('<GlobalBrush />', () => {
 
     it('renders a `GlobalBrush` component', () => {
+        const testState = {
+            containerWidth: 1000,
+            containerHeight: 1000
+        };
+
         const testProps = {
             show: true,
             viewPortDateRange : {
@@ -20,29 +24,19 @@ describe('<GlobalBrush />', () => {
                 endDate : new Date(Date.now())
             },
             onBrushChange : function() {return},
-            width : 1024,
             height : 50
         }
 
-        const wrapper = shallow(<GlobalBrush {...testProps}/>);
+        const wrapper = mount(<GlobalBrush {...testProps}/>);
+        wrapper.setState(testState);
 
-        const outerDivNode = wrapper.find('div');
-        expect(outerDivNode.length).toBe(1);
+        const brushNode = wrapper.find('Brush');
+        expect(brushNode.length).toBe(1);
 
-        expect(outerDivNode.prop('width')).toBe(undefined);
-        expect(outerDivNode.prop('style')).toMatch({ float: 'none' });
-        expect(outerDivNode.hasClass('brush')).toBe(true);
-
-        const childNodes = outerDivNode.children;
-        expect(childNodes.length).toBe(1);
-
-        const brushNode = outerDivNode.childAt(0);
-        expect(brushNode.type()).toBe(Brush);
-
-        expect(brushNode.prop("width")).toBe(testProps.width);
+        expect(brushNode.prop("width")).toBe(testState.containerHeight);
         expect(brushNode.prop("height")).toBe(testProps.height);
         expect(brushNode.prop("margin")).toEqual({ top: 0, bottom: 30, left: 50, right: 20 });
-        expect(brushNode.prop("xScale")).toBe(null);
+        expect(brushNode.prop("xScale")).toNotBe(null);
         expect(brushNode.prop("yScale")).toBe(null);
         expect(brushNode.prop("extent")).toEqual([testProps.viewPortDateRange.startDate, testProps.viewPortDateRange.endDate]);
         expect(brushNode.prop("onChange")).toNotBe(undefined);
@@ -50,19 +44,24 @@ describe('<GlobalBrush />', () => {
     });
 
     it('does not render a `GlobalBrush` component', () => {
+        const testState = {
+            containerWidth: 1000,
+            containerHeight: 1000
+        };
+
         const testProps = {
             show: false,
             viewPortDateRange : {
                 startDate : moment().subtract(1, "days").toDate(),
                 endDate : new Date(Date.now())
             },
-            onBrushChange : function() {return},
-            width : 1024
+            onBrushChange : function() {return}
         }
 
-        const wrapper = shallow(<GlobalBrush {...testProps}/>);
+        const wrapper = mount(<GlobalBrush {...testProps}/>);
+        wrapper.setState(testState);
 
-        expect(wrapper.children().length).toBe(0);
-        expect(wrapper.type()).toBe(null);
+        const brushNode = wrapper.find('Brush');
+        expect(brushNode.length).toBe(0);
     });
 });

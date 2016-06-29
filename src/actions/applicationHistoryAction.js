@@ -10,7 +10,7 @@ export function loadedVersionHistory(versionId, history) {
     };
 }
 
-export function performClearVersionHistory(versionId) {
+export function clearVersionHistory(versionId) {
     return {
         type: types.CLEAR_VERSION_HISTORY,
         versionId,
@@ -21,23 +21,11 @@ export function performClearVersionHistory(versionId) {
     };
 }
 
-export function loadVersionHistory(applicationId, versionId, startDate, endDate) {
-    return function(dispatch) {
-        dispatch(performClearVersionHistory(versionId));
-        dispatch(beginLoadingVersionHistory());
-        return Api.fetchHistory(applicationId, versionId, startDate.toISOString(), endDate.toISOString()).then(history => {
-            dispatch(loadedVersionHistory(versionId, history));
-        }).catch(error => {
-            throw(error);
-        });
-    };
-}
-
 export function loadVersionHistories(applicationId, versions, startDate, endDate) {
     return function(dispatch) {
         versions.forEach(version => {
-            let versionId = version.value;
-            dispatch(performClearVersionHistory(versionId));
+            const versionId = version.value;
+            dispatch(clearVersionHistory(versionId));
             dispatch(beginLoadingVersionHistory());
             return Api.fetchHistory(applicationId, versionId, startDate, endDate).then(history => {
                 dispatch(loadedVersionHistory(versionId, history));

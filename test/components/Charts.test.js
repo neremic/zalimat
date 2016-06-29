@@ -1,7 +1,6 @@
 "use strict";
 
 import React from 'react';
-var createFragment = require('react-addons-create-fragment');
 
 import Charts from '../../src/components/Charts.jsx'
 import { DisplayApp } from './mock_components/DisplayApp.jsx'

@@ -4,8 +4,7 @@ import React from 'react'
 
 import { Brush } from 'react-d3-components';
 import d3 from 'd3';
-
-import moment from 'moment';
+import Dimensions from 'react-dimensions'
 
 const BRUSH_MARGIN = {top: 0, bottom: 30, left: 50, right: 20};
 const BRUSH_HORIZONTAL_MARGIN = BRUSH_MARGIN.left + BRUSH_MARGIN.right;
@@ -17,7 +16,6 @@ class GlobalBrush extends React.Component {
 
         let { startDate, endDate } = props.viewPortDateRange;
         this.state = {
-            xScaleBrush: undefined,
             xstartDate: startDate
         };
         this.handleChange = this.handleChange.bind(this);
@@ -28,25 +26,26 @@ class GlobalBrush extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        let {startDate, endDate} = nextProps.viewPortDateRange;
-        if (nextProps.width != this.props.width || this.state.xstartDate != startDate) {
-            this.setState({
-                xScaleBrush: d3.time.scale().domain([startDate, endDate]).range([0, nextProps.width - BRUSH_HORIZONTAL_MARGIN]),
-                xstartDate: startDate
-            });
+        console.log("GB componentWillReceiveProps %O", nextProps);
+        let {startDate} = nextProps.viewPortDateRange;
+        this.setState(this.state);
+        if (this.state.xstartDate != startDate) {
+            this.setState({xstartDate: startDate});
         }
     }
 
     render() {
         if (this.props.show) {
+            let {startDate, endDate} = this.props.viewPortDateRange;
+
             return (
                 <div className="brush" style={BRUSH_STYLE}>
                     <Brush
-                        width = {this.props.width}
+                        width = {this.props.containerWidth}
                         height = {this.props.height}
                         margin = {BRUSH_MARGIN}
-                        xScale = {this.state.xScaleBrush}
-                        extent = {[this.props.viewPortDateRange.startDate, this.props.viewPortDateRange.endDate]}
+                        xScale = {d3.time.scale().domain([startDate, endDate]).range([0, this.props.containerWidth - BRUSH_HORIZONTAL_MARGIN])}
+                        extent = {[startDate, endDate]}
                         onChange = {this.handleChange}
                     />
                 </div>
@@ -66,4 +65,4 @@ GlobalBrush.propTypes = {
     onBrushChange: React.PropTypes.func.isRequired
 };
 
-export default GlobalBrush;
+export default Dimensions()(GlobalBrush);

@@ -25,9 +25,10 @@ export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgre
             versionsCallsPending : state.versionsCallsPending - 1
         });
         return newState;
-    } else if (action.type == types.AJAX_CALL_ERROR ||
-        actionTypeStartsWithLoaded(action.type)) {
-        return state - 1;
+        // TODO
+    // } else if (action.type == types.AJAX_CALL_ERROR ||
+    //     actionTypeStartsWithLoaded(action.type)) {
+    //     return state - 1;
     }
 
 

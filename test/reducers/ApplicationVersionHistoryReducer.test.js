@@ -49,9 +49,9 @@ describe('ApplicationVersionHistoryReducer', () => {
         expect(newState.get(versionId)).toNotBe(null);
         expect(newState.get(versionId).label).toBe('');
         expect(newState.get(versionId).values.length).toBe(2);
-        expect(newState.get(versionId).values[0].x).toBe(date1.getTime());
+        expect(newState.get(versionId).values[0].x).toEqual(date1);
         expect(newState.get(versionId).values[0].y).toBe(10);
-        expect(newState.get(versionId).values[1].x).toBe(date2.getTime());
+        expect(newState.get(versionId).values[1].x).toEqual(date2);
         expect(newState.get(versionId).values[1].y).toBe(13);
     });
 
@@ -91,7 +91,7 @@ describe('ApplicationVersionHistoryReducer', () => {
         initialState.histories.set(versionId, history)
 
 
-        const action = actions.performClearVersionHistory(versionId);
+        const action = actions.clearVersionHistory(versionId);
 
         const newState = applicationVersionHistoryReducer(initialState.histories, action);
 

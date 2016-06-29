@@ -3,6 +3,7 @@
 import React from 'react'
 
 import d3 from 'd3';
+import Dimensions from 'react-dimensions'
 
 import { AreaChart } from 'react-d3-components';
 
@@ -13,26 +14,19 @@ const CHART_HORIZONTAL_MARGINS = MARGINS.left + MARGINS.right;
 class Chart extends React.Component {
     constructor(props) {
         super(props);
-        this.state = ({xScale : undefined});
-    }
-
-    componentWillReceiveProps(nextProps) {
-        const { startDate, endDate } = nextProps.viewPortDateRange;
-        this.setState({xScale: d3.time.scale().domain([startDate, endDate]).range([0, nextProps.width - CHART_HORIZONTAL_MARGINS])});
     }
 
     render() {
+        const { startDate, endDate } = this.props.viewPortDateRange;
         return (
-            <div>
-                <AreaChart
-                    data = {this.props.dataSet}
-                    width = {this.props.width}
-                    xScale = {this.state.xScale}
-                    interpolate = {CHART_INTERPOLATION}
-                    height = {this.props.height}
-                    margin = {MARGINS}
-                />
-            </div>
+            <AreaChart
+                data = {this.props.dataSet}
+                width = {this.props.containerWidth}
+                xScale = {d3.time.scale().domain([startDate, endDate]).range([0, this.props.containerWidth - CHART_HORIZONTAL_MARGINS])}
+                interpolate = {CHART_INTERPOLATION}
+                height = {this.props.height}
+                margin = {MARGINS}
+            />
         );
     }
 };
@@ -53,4 +47,4 @@ Chart.propTypes = {
     }).isRequired
 };
 
-export default Chart;
+export default Dimensions()(Chart);

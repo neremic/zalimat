@@ -22,7 +22,7 @@ security:
 
 paths:
 
-  '/apps/{application_id}/versions/{version_id}/instance_histories':
+  '/lifecycle/{application_id}/versions/{version_id}/instance_histories':
     get:
       summary: read instance history of a version of an application
       description: |
