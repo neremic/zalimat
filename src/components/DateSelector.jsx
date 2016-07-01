@@ -50,6 +50,7 @@ class DateSelector extends React.Component {
                 <DayPicker
                     onDayClick = {this.handleDatePicked}
                     disabledDays = {this.isValidDate}
+                    enableOutsideDays = {true}
                 />
         }
         return (

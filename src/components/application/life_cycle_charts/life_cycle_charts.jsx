@@ -35,6 +35,10 @@ class LifeCycleCharts extends React.Component {
             viewPortDateRange : {
                 startDate : moment().subtract(1, "days").startOf('day').toDate(),
                 endDate : moment().endOf('day').toDate()
+            },
+            brushViewPortDateRange : {
+                startDate : moment().subtract(1, "days").startOf('day').toDate(),
+                endDate : moment().endOf('day').toDate()
             }
         };
 
@@ -42,7 +46,7 @@ class LifeCycleCharts extends React.Component {
         this.handleEndDatePicked = this.handleEndDatePicked.bind(this);
         this.handleVersionSelected = this.handleVersionSelected.bind(this);
         this.handleBrushChanged = this.handleBrushChanged.bind(this);
-        this.handleRemoveVersion = this.handleRemoveVersion.bind(this);
+        this.handleVersionRemoved = this.handleVersionRemoved.bind(this);
     }
 
     handleBrushChanged(start, end) {
@@ -56,7 +60,7 @@ class LifeCycleCharts extends React.Component {
 
     handleVersionSelected(selectedOptions) {
         const addedVersions = _.difference(selectedOptions, this.state.selectedVerions);
-        this.performLoadVersionHistory(
+        this.loadVersionHistory(
             this.state.applicationId,
             addedVersions,
             this.state.viewPortDateRange.startDate,
@@ -65,7 +69,7 @@ class LifeCycleCharts extends React.Component {
         this.setState({ selectedVerions : selectedOptions });
     }
 
-    handleRemoveVersion(versionToBeRemoved) {
+    handleVersionRemoved(versionToBeRemoved) {
         const newValues = this.state.selectedVerions.filter((v) => {
             return v.value != versionToBeRemoved;
         });
@@ -78,7 +82,7 @@ class LifeCycleCharts extends React.Component {
         }
     }
 
-    performLoadVersionHistory(applicationId, versions, startDate, endDate) {
+    loadVersionHistory(applicationId, versions, startDate, endDate) {
         this.props.actions.loadVersionHistories(
             applicationId,
             versions,
@@ -87,15 +91,20 @@ class LifeCycleCharts extends React.Component {
         );
     }
 
-    handleDateChange(startDate, endDate) {
-        this.performLoadVersionHistory(
+    handleDateChanged(startDate, endDate) {
+        this.loadVersionHistory(
             this.state.applicationId,
             this.state.selectedVerions,
             startDate,
             endDate
-        )
+        );
+
         this.setState({
             viewPortDateRange : {
+                startDate : startDate,
+                endDate : endDate
+            },
+            brushViewPortDateRange : {
                 startDate : startDate,
                 endDate : endDate
             }
@@ -103,14 +112,15 @@ class LifeCycleCharts extends React.Component {
     }
 
     handleStartDatePicked(date) {
-        this.handleDateChange(date, this.state.viewPortDateRange.endDate);
+        this.handleDateChanged(date, this.state.viewPortDateRange.endDate);
     }
 
     handleEndDatePicked(date) {
-        this.handleDateChange(this.state.viewPortDateRange.startDate, date);
+        this.handleDateChanged(this.state.viewPortDateRange.startDate, date);
     }
 
     render() {
+        const {startDate, endDate} = this.state.viewPortDateRange;
         return (
             <div style={{padding: "40px"}}>
                 <div style={{display: "flex"}}>
@@ -139,7 +149,7 @@ class LifeCycleCharts extends React.Component {
                         <GlobalBrush
                             show = {true}
                             onBrushChange = {this.handleBrushChanged}
-                            viewPortDateRange = {this.state.viewPortDateRange}
+                            viewPortDateRange = {this.state.brushViewPortDateRange}
                             height = {BRUSH_HEIGHT}
                         />
                     </div>
@@ -153,7 +163,7 @@ class LifeCycleCharts extends React.Component {
                     <div style = {{flex: "auto"}}>
                         <Charts
                             selectedVersions = {this.state.selectedVerions}
-                            onDelete = {this.handleRemoveVersion}
+                            onDelete = {this.handleVersionRemoved}
                             dataSets = {this.props.versionsHistory}
                             viewPortDateRange = {this.state.viewPortDateRange}
                             applicationId = {this.state.applicationId}
