@@ -82,12 +82,20 @@ class ChartWithHeader extends React.Component{
 
 ChartWithHeader.propTypes = {
     title: React.PropTypes.string,
-    dataSet: React.PropTypes.object,
+    dataSet: React.PropTypes.shape({
+        label: React.PropTypes.string,
+        values: React.PropTypes.arrayOf(
+            React.PropTypes.shape({
+                x: React.PropTypes.instanceOf(Date),
+                y: React.PropTypes.number
+            })
+        )
+    }).isRequired,
     viewPortDateRange: React.PropTypes.shape({
-        startDate: React.PropTypes.object,
-        endDate: React.PropTypes.object
-    }),
-    onDelete: React.PropTypes.func
+        startDate: React.PropTypes.instanceOf(Date),
+        endDate: React.PropTypes.instanceOf(Date)
+    }).isRequired,
+    onDelete: React.PropTypes.func.isRequired
 };
 
 export default ChartWithHeader;

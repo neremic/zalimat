@@ -20,7 +20,13 @@ describe('<ChartWithHeader />', () => {
 
     it('renders a `Label` component', () => {
         const testProps = {
-            title : 'my title'
+            title : 'my title',
+            viewPortDateRange : {
+                startDate : moment().subtract(1, "days").toDate(),
+                endDate : new Date(Date.now())
+            },
+            dataSet : {label: '', values: []},
+            onDelete : () => {}
         }
 
         const wrapper = shallow(<ChartWithHeader {...testProps}/>);
@@ -32,7 +38,14 @@ describe('<ChartWithHeader />', () => {
     });
 
     it('renders the `delete button` component', () => {
-        const testProps = {}
+        const testProps = {
+            viewPortDateRange : {
+                startDate : moment().subtract(1, "days").toDate(),
+                endDate : new Date(Date.now())
+            },
+            dataSet : {label: '', values: []},
+            onDelete : () => {}
+        }
 
         const wrapper = shallow(<ChartWithHeader {...testProps}/>);
         const buttonNode = wrapper.find(Button);
@@ -44,6 +57,11 @@ describe('<ChartWithHeader />', () => {
 
     it('calls the callback via click onto the `delete button` component', () => {
         const testProps = {
+            viewPortDateRange : {
+                startDate : moment().subtract(1, "days").toDate(),
+                endDate : new Date(Date.now())
+            },
+            dataSet : {label: '', values: []},
             onDelete : sinon.spy()
         }
 
@@ -62,8 +80,8 @@ describe('<ChartWithHeader />', () => {
                 endDate : new Date(Date.now())
             },
             dataSet : createRandomData(),
-            onDelete : undefined
-        }
+            onDelete : () => {}
+        };
 
         function createRandomData() {
             const oneHour = 3600000;
@@ -95,10 +113,10 @@ describe('<ChartWithHeader />', () => {
                 endDate : new Date(Date.now())
             },
             dataSet : createRandomData(),
-            onDelete : undefined,
+            onDelete : () => {},
             applicationId : 'kio',
             versionId : 'vId'
-        }
+        };
 
         function createRandomData() {
             const oneHour = 3600000;

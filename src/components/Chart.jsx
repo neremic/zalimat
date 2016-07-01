@@ -16,6 +16,10 @@ class Chart extends React.Component {
         super(props);
     }
 
+    componentWillReceiveProps(nextProps) {
+        console.log("chart will receive props %O", nextProps);
+    }
+
     render() {
         const { startDate, endDate } = this.props.viewPortDateRange;
         return (
@@ -42,8 +46,8 @@ Chart.propTypes = {
         )
     }).isRequired,
     viewPortDateRange: React.PropTypes.shape({
-        startDate: React.PropTypes.object,
-        endDate: React.PropTypes.object
+        startDate: React.PropTypes.instanceOf(Date),
+        endDate: React.PropTypes.instanceOf(Date)
     }).isRequired
 };
 
