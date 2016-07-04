@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import VersionSelector from '../src/components/VersionSelector.jsx'
+import VersionSelector from '../../src/components/VersionSelector.jsx'
 
 import Multiselect from 'react-widgets/lib/Multiselect'
 import Button from 'react-bootstrap/lib/Button';
@@ -15,7 +15,7 @@ describe('<VersionSelector />', () => {
 
     it('renders a `Multiselect` component', () => {
         const testProps = {
-            versions : [{value: 1, text: 'v1'}, {value: 2, text: 'v2'}],
+            versions : [{value: 'v1', text: 'v1'}, {value: 'v2', text: 'v2'}],
             removeVersion : undefined,
             onChange : () => {}
         }
@@ -34,7 +34,7 @@ describe('<VersionSelector />', () => {
 
     it('renders a `Button` component', () => {
         const testProps = {
-            versions : [{value: 1, text: 'v1'}, {value: 2, text: 'v2'}],
+            versions : [{value: 'v1', text: 'v1'}, {value: 'v2', text: 'v2'}],
             removeVersion : undefined,
             onChange : () => {}
         }
@@ -47,7 +47,7 @@ describe('<VersionSelector />', () => {
 
     it('calls its callback', () => {
         const testProps = {
-            versions : [{value: 1, text: 'v1'}, {value: 2, text: 'v2'}],
+            versions : [{value: 'v1', text: 'v1'}, {value: 'v2', text: 'v2'}],
             removeVersion : undefined,
             onChange : sinon.spy()
         }
@@ -63,7 +63,7 @@ describe('<VersionSelector />', () => {
 
     it('does not update state if no version to be removed', () => {
         const testProps = {
-            versions : [{value: 1, text: 'v1'}, {value: 2, text: 'v2'}],
+            versions : [{value: 'v1', text: 'v1'}, {value: 'v2', text: 'v2'}],
             removeVersion : undefined,
             onChange : () => {}
         }

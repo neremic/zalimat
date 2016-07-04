@@ -4,44 +4,54 @@ import React from 'react'
 
 import { Brush } from 'react-d3-components';
 import d3 from 'd3';
+import Dimensions from 'react-dimensions'
+
+const BRUSH_MARGIN = {top: 0, bottom: 30, left: 50, right: 20};
+const BRUSH_HORIZONTAL_MARGIN = BRUSH_MARGIN.left + BRUSH_MARGIN.right;
+const BRUSH_STYLE = {float: 'none'};
 
 class GlobalBrush extends React.Component {
     constructor(props) {
         super(props);
-        let { startDate, endDate } = props.viewPortDateRange;
+
+        const { startDate, endDate } = props.viewPortDateRange;
         this.state = {
-            xScaleBrush: d3.time.scale().domain([startDate, endDate]).range([0, 400 - 70]),
-            xstartDate: startDate
+            startDate,
+            extent: [startDate, endDate]
         };
+
         this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange(extent) {
+        this.setState({extent: [extent[0], extent[1]]});
         this.props.onBrushChange(...extent);
     }
 
     componentWillReceiveProps(nextProps) {
-        let {startDate, endDate} = nextProps.viewPortDateRange;
-        if (nextProps.width != this.props.width || this.state.xstartDate != startDate) {
-            this.setState({
-                xScaleBrush: d3.time.scale().domain([startDate, endDate]).range([0, nextProps.width - 70]),
-                xstartDate: startDate
-            });
+        const {startDate, endDate} = nextProps.viewPortDateRange;
+        if (this.state.startDate != startDate) {
+            const newState = {
+                startDate,
+                extent: [startDate, endDate]
+            };
+            this.setState(newState);
         }
     }
 
     render() {
         if (this.props.show) {
+            let {startDate, endDate} = this.props.viewPortDateRange;
+
             return (
-                <div className="brush" style={{float: 'none'}}>
+                <div className="brush" style={BRUSH_STYLE}>
                     <Brush
-                        width={this.props.width}
-                        height={50}
-                        margin={{top: 0, bottom: 30, left: 50, right: 20}}
-                        xScale={this.state.xScaleBrush}
-                        extent={[this.props.viewPortDateRange.startDate, this.props.viewPortDateRange.endDate]}
-                        onChange={this.handleChange}
-                        xAxis={{tickValues: this.state.xScaleBrush.ticks(d3.time.days, 1), tickFormat: d3.time.format("%m/%d")}}
+                        width = {this.props.containerWidth}
+                        height = {this.props.height}
+                        margin = {BRUSH_MARGIN}
+                        xScale = {d3.time.scale().domain([startDate, endDate]).range([0, this.props.containerWidth - BRUSH_HORIZONTAL_MARGIN])}
+                        extent = {this.state.extent}
+                        onChange = {this.handleChange}
                     />
                 </div>
             )
@@ -52,12 +62,12 @@ class GlobalBrush extends React.Component {
 }
 
 GlobalBrush.propTypes = {
-    show: React.PropTypes.bool,
+    show: React.PropTypes.bool.isRequired,
     viewPortDateRange: React.PropTypes.shape({
-        startDate: React.PropTypes.object,
-        endDate: React.PropTypes.object
-    }),
-    onBrushChange: React.PropTypes.func
+        startDate: React.PropTypes.instanceOf(Date),
+        endDate: React.PropTypes.instanceOf(Date)
+    }).isRequired,
+    onBrushChange: React.PropTypes.func.isRequired
 };
 
-export default GlobalBrush;
+export default Dimensions()(GlobalBrush);

@@ -2,10 +2,10 @@
 
 import React from 'react';
 
-import ChartWithHeader from '../src/components/ChartWithHeader.jsx'
-import Chart from '../src/components/Chart.jsx'
-import DisplayApp from '../src/components/DisplayApp.jsx'
-import DisplayAppAndVersion from '../src/components/DisplayAppAndVersion.jsx'
+import ChartWithHeader from '../../src/components/ChartWithHeader.jsx'
+import Chart from '../../src/components/Chart.jsx'
+import { DisplayApp } from './mock_components/DisplayApp.jsx'
+import { DisplayAppAndVersion } from './mock_components/DisplayAppAndVersion.jsx'
 
 import Label from 'react-bootstrap/lib/Label';
 import Button from 'react-bootstrap/lib/Button';
@@ -20,18 +20,32 @@ describe('<ChartWithHeader />', () => {
 
     it('renders a `Label` component', () => {
         const testProps = {
-            title : 'my title'
+            title : 'my title',
+            viewPortDateRange : {
+                startDate : moment().subtract(1, "days").toDate(),
+                endDate : new Date(Date.now())
+            },
+            dataSet : {label: '', values: []},
+            onDelete : () => {}
         }
 
         const wrapper = shallow(<ChartWithHeader {...testProps}/>);
         const labelNode = wrapper.find(Label);
+        const childNode = labelNode.childAt(0);
 
         expect(labelNode.length).toBe(1);
-        expect(labelNode.prop("children")).toBe(testProps.title);
+        expect(childNode.text()).toBe(testProps.title);
     });
 
     it('renders the `delete button` component', () => {
-        const testProps = {}
+        const testProps = {
+            viewPortDateRange : {
+                startDate : moment().subtract(1, "days").toDate(),
+                endDate : new Date(Date.now())
+            },
+            dataSet : {label: '', values: []},
+            onDelete : () => {}
+        }
 
         const wrapper = shallow(<ChartWithHeader {...testProps}/>);
         const buttonNode = wrapper.find(Button);
@@ -43,6 +57,11 @@ describe('<ChartWithHeader />', () => {
 
     it('calls the callback via click onto the `delete button` component', () => {
         const testProps = {
+            viewPortDateRange : {
+                startDate : moment().subtract(1, "days").toDate(),
+                endDate : new Date(Date.now())
+            },
+            dataSet : {label: '', values: []},
             onDelete : sinon.spy()
         }
 
@@ -61,8 +80,8 @@ describe('<ChartWithHeader />', () => {
                 endDate : new Date(Date.now())
             },
             dataSet : createRandomData(),
-            onDelete : undefined
-        }
+            onDelete : () => {}
+        };
 
         function createRandomData() {
             const oneHour = 3600000;
@@ -94,10 +113,10 @@ describe('<ChartWithHeader />', () => {
                 endDate : new Date(Date.now())
             },
             dataSet : createRandomData(),
-            onDelete : undefined,
+            onDelete : () => {},
             applicationId : 'kio',
             versionId : 'vId'
-        }
+        };
 
         function createRandomData() {
             const oneHour = 3600000;

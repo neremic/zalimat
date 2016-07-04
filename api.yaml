@@ -21,12 +21,7 @@ security:
   - oauth2: [uid]
 
 paths:
-
-  # /apps/{app_id}/versions from kio will yield all versions, not all of them were necessarily deployed
-  # maybe introduce a second endpoint to get deployed versions for a certain time frame?
-  # also the abstract concept of "versions" might not exist for too long anymore, but since a "version" is only a string
-  # for us, it should not matter much
-  '/apps/{application_id}/versions/{version_id}/instance_histories':
+  '/lifecycle/{application_id}/versions/{version_id}/instance_histories':
     get:
       summary: read instance history of a version of an application
       description: |
@@ -65,16 +60,21 @@ paths:
                 type: string
                 description: ID of the version's application
                 example: kio
-              change_date:
-                type: string
-                format: date-time
-                description: Point in time when the instance count of the version changed.
-                example: '2015-04-25T16:25:00.000Z'
-              instances_count:
-                type: integer
-                format: int32
-                description: amount of instances at the gi
-                example: 4
+              data:
+                type: array
+                items:
+                   type: object
+                   properties:
+                     change_date:
+                       type: string
+                       format: date-time
+                       description: Point in time when the instance count of the version changed.
+                       example: '2015-04-25T16:25:00.000Z'
+                     instance_count:
+                       type: integer
+                       format: int32
+                       description: amount of instances at the gi
+                       example: 4
 
         404:
           description: Not found e.g. no valid application ID or version ID or both

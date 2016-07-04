@@ -1,60 +1,52 @@
 "use strict";
 
 import React from 'react'
-import Grid from 'react-bootstrap/lib/Grid';
-import Row from 'react-bootstrap/lib/Row';
-import Col from 'react-bootstrap/lib/Col';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import _ from 'lodash'
+
+import * as versionHistoryActions from '../../../actions/applicationHistoryAction';
 
 import moment from 'moment';
 
-import AutoWidth from '@zalando/react-automatic-width';
-import DateTime from 'react-datetime'
-
+import {Test} from '../../Test';
+import DimensionTest from '../../DimensionTest';
 import Charts from '../../Charts';
-import DisplayApp from '../../DisplayApp';
-import DisplayAppAndVersion from '../../DisplayAppAndVersion';
 import GlobalBrush from '../../GlobalBrush';
 import VersionSelector from '../../VersionSelector'
+import DateSelector from '../../DateSelector'
+
+import 'react-widgets/lib/less/react-widgets.less'
+import '../../../styles/react-datetime.css'
+
+const BRUSH_HEIGHT = 50;
+const CHART_HEIGHT = 200;
+const DATE_FORMAT = 'Do [of] MMM YYYY';
 
 class LifeCycleCharts extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
+            applicationId : 'kio',
             versionToBeRemoved : undefined,
             versions : [],
             selectedVerions : [],
-            versionsData : new Map(),
             viewPortDateRange : {
-                startDate : moment().subtract(1, "days").toDate(),
-                endDate : new Date(Date.now())
+                startDate : moment().subtract(1, "days").startOf('day').toDate(),
+                endDate : moment().endOf('day').toDate()
             },
             brushViewPortDateRange : {
-                startDate : moment().subtract(1, "days").toDate(),
-                endDate : new Date(Date.now())
-            },
-            xScaleBrush: d3.time.scale().domain([moment().subtract(1, "days").toDate(), new Date(Date.now())]).range([0, 400 - 70])
-        };
-        for (let i = 0; i<20; i++) {
-            var r = Math.random();
-            let entry = {
-                value: i,
-                text: r.toString(16).substring(2, 7).toUpperCase()
+                startDate : moment().subtract(1, "days").startOf('day').toDate(),
+                endDate : moment().endOf('day').toDate()
             }
-            this.state.versions.push(entry);
-        }
-    }
+        };
 
-    createRandomData() {
-        const oneHour = 3600000;
-        let data = {label: '', values: []};
-        let startDate = new Date(2016, 5, 5);
-        let startMillis = startDate.getTime();
-        for (let i = 0; i < 60; i++) {
-            let multi = Math.floor(Math.random() * 5);
-            startMillis += oneHour * multi;
-            data.values.push({x: new Date(startMillis), y : Math.floor(Math.random() * 10)});
-        }
-        return data;
+        this.handleStartDatePicked = this.handleStartDatePicked.bind(this);
+        this.handleEndDatePicked = this.handleEndDatePicked.bind(this);
+        this.handleVersionSelected = this.handleVersionSelected.bind(this);
+        this.handleBrushChanged = this.handleBrushChanged.bind(this);
+        this.handleVersionRemoved = this.handleVersionRemoved.bind(this);
     }
 
     handleBrushChanged(start, end) {
@@ -67,23 +59,18 @@ class LifeCycleCharts extends React.Component {
     }
 
     handleVersionSelected(selectedOptions) {
-        let versionsData = this.state.versionsData;
-        for (let i = 0; i < selectedOptions.length; i++) {
-            let versionId = selectedOptions[i].value;
-            if (versionsData.get(versionId) == undefined) {
-                versionsData.set(versionId, this.createRandomData());
-            }
-        }
-
-        this.setState(
-            { selectedVerions : selectedOptions,
-                versionsData : versionsData
-            }
+        const addedVersions = _.difference(selectedOptions, this.state.selectedVerions);
+        this.loadVersionHistory(
+            this.state.applicationId,
+            addedVersions,
+            this.state.viewPortDateRange.startDate,
+            this.state.viewPortDateRange.endDate
         );
+        this.setState({ selectedVerions : selectedOptions });
     }
 
-    handleRemoveVersion(versionToBeRemoved) {
-        let newValues = this.state.selectedVerions.filter((v) => {
+    handleVersionRemoved(versionToBeRemoved) {
+        const newValues = this.state.selectedVerions.filter((v) => {
             return v.value != versionToBeRemoved;
         });
 
@@ -95,74 +82,112 @@ class LifeCycleCharts extends React.Component {
         }
     }
 
-    handleDatePicked(moment) {
+    loadVersionHistory(applicationId, versions, startDate, endDate) {
+        this.props.actions.loadVersionHistories(
+            applicationId,
+            versions,
+            startDate,
+            endDate
+        );
+    }
+
+    handleDateChanged(startDate, endDate) {
+        this.loadVersionHistory(
+            this.state.applicationId,
+            this.state.selectedVerions,
+            startDate,
+            endDate
+        );
+
         this.setState({
             viewPortDateRange : {
-                startDate : moment.toDate(),
-                endDate : new Date(Date.now())
+                startDate : startDate,
+                endDate : endDate
             },
             brushViewPortDateRange : {
-                startDate : moment.toDate(),
-                endDate : new Date(Date.now())
+                startDate : startDate,
+                endDate : endDate
             }
         });
     }
 
-    isValidDate(currentDate, selectedDate) {
-        let now = moment();
-        let diff = now.diff(currentDate, 'days');
-        return diff > 0;
+    handleStartDatePicked(date) {
+        this.handleDateChanged(date, this.state.viewPortDateRange.endDate);
+    }
+
+    handleEndDatePicked(date) {
+        this.handleDateChanged(this.state.viewPortDateRange.startDate, date);
     }
 
     render() {
+        const {startDate, endDate} = this.state.viewPortDateRange;
         return (
-            <Grid>
-                <Row className="show-grid">
-                    <Col md={4}>
-                        <VersionSelector
-                            removeVersion = {this.state.versionToBeRemoved}
-                            versions = {this.state.versions}
-                            onChange = {this.handleVersionSelected.bind(this)}
+            <div style={{padding: "40px"}}>
+                <div style={{display: "flex"}}>
+                    <VersionSelector
+                        removeVersion = {this.state.versionToBeRemoved}
+                        versions = {this.props.versions}
+                        onChange = {this.handleVersionSelected}
+                        isLoading = {this.props.ajaxStatus.versionsCallsPending > 0}
+                    />
+                </div>
+                <hr />
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                    <h3>
+                        {moment(this.state.viewPortDateRange.startDate).format(DATE_FORMAT)}
+                    </h3>
+                    <h3>
+                        {moment(this.state.viewPortDateRange.endDate).format(DATE_FORMAT)}
+                    </h3>
+                </div>
+                <div style={{display: "flex", justifyContent: "flex-center"}}>
+                    <DateSelector
+                        datePicked = {this.handleStartDatePicked}
+                        title = 'Select Start Date'
+                    />
+                    <div style = {{flex: "auto"}}>
+                        <GlobalBrush
+                            show = {true}
+                            onBrushChange = {this.handleBrushChanged}
+                            viewPortDateRange = {this.state.brushViewPortDateRange}
+                            height = {BRUSH_HEIGHT}
                         />
-                    </Col>
-                    <Col md={4}>
-                        <DateTime
-                            defaultValue = {moment().subtract(1, "days")}
-                            timeFormat = {false}
-                            isValidDate = {this.isValidDate.bind(this)}
-                            onChange = {this.handleDatePicked.bind(this)}
-                        />
-                    </Col>
-                </Row>
-                <Row className="show-grid">
-                    <Col md={12}>
-                        <AutoWidth className="responsive">
-                            <GlobalBrush
-                                show = {this.state.selectedVerions.length > 0}
-                                onBrushChange = {this.handleBrushChanged.bind(this)}
-                                viewPortDateRange = {this.state.brushViewPortDateRange}
-                            />
-                        </AutoWidth>
-                    </Col>
-                </Row>
-                <Row className="show-grid">
-                    <Col md={12}>
+                    </div>
+                    <DateSelector
+                        datePicked = {this.handleEndDatePicked}
+                        title = 'Select End Date'
+                    />
+                </div>
+                <hr />
+                <div style={{display: "flex", justifyContent: "flex-center"}}>
+                    <div style = {{flex: "auto"}}>
                         <Charts
                             selectedVersions = {this.state.selectedVerions}
-                            onDelete = {this.handleRemoveVersion.bind(this)}
-                            dataSets = {this.state.versionsData}
+                            onDelete = {this.handleVersionRemoved}
+                            dataSets = {this.props.versionsHistory}
                             viewPortDateRange = {this.state.viewPortDateRange}
-                            applicationId = "kio"
-                        >
-                            <DisplayApp/>
-                            <DisplayAppAndVersion/>
-                        </Charts>
-                    </Col>
-                </Row>
-            </Grid>
+                            applicationId = {this.state.applicationId}
+                            height = {CHART_HEIGHT}
+                        />
+                    </div>
+                </div>
+            </div>
         )
     }
 }
 
+function mapStateToProps(state, ownProps) {
+    return {
+        versions : state.applicationVersionReducer,
+        versionsHistory : state.applicationVersionHistoryReducer,
+        ajaxStatus : state.ajaxStatusReducer
+    };
+}
 
-export default LifeCycleCharts;
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(versionHistoryActions, dispatch)
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LifeCycleCharts);
