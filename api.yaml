@@ -21,7 +21,6 @@ security:
   - oauth2: [uid]
 
 paths:
-
   '/lifecycle/{application_id}/versions/{version_id}/instance_histories':
     get:
       summary: read instance history of a version of an application
@@ -35,14 +34,14 @@ paths:
         - $ref: '#/parameters/VersionID'
         - name: start_date
           in: query
-          description: parm1
+          description: parm1 # 💩
           required: false
           type: string
           format: date-time
           allowEmptyValue: false
         - name: end_date
           in: query
-          description: parm1
+          description: parm1 # 💩
           required: false
           type: string
           format: date-time
