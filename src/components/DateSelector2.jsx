@@ -11,6 +11,7 @@ import { Calendar } from 'react-date-picker'
 
 const STYLE_LEFT = {width: "1px", height: "1px", position: "relative", top: 0, left: 0, zIndex: 10};
 const STYLE_RIGHT = {width: "1px", height: "1px", position: "relative", top: 0, left: -220, zIndex: 10};
+const DATE_FORMAT = "YYYY-MM-DD";
 
 class DateSelector2 extends React.Component {
     constructor(props) {
@@ -18,7 +19,6 @@ class DateSelector2 extends React.Component {
 
         this.handleButtonClick = this.handleButtonClick.bind(this);
         this.handleDatePicked = this.handleDatePicked.bind(this);
-        this.isValidDate = this.isValidDate.bind(this);
 
         this.state = {openDatePicker : false}
     }
@@ -28,15 +28,9 @@ class DateSelector2 extends React.Component {
         this.setState({openDatePicker : !this.state.openDatePicker});
     }
 
-    handleDatePicked(dateString, { dateMoment, timestamp }) {
+    handleDatePicked(dateString, { dateMoment}) {
         this.setState({openDatePicker : false});
         this.props.datePicked(dateMoment.toDate());
-    }
-
-    isValidDate(currentDate) {
-        let now = moment();
-        let diff = now.diff(currentDate, 'days');
-        return diff < 0;
     }
 
     render() {
@@ -49,7 +43,7 @@ class DateSelector2 extends React.Component {
                         collapseOnDateClick = {true}
                         footer = {false}
                         forceValidDate = {true}
-                        dateFormat="YYYY-MM-DD"
+                        dateFormat={DATE_FORMAT}
                         minDate={this.props.minDate}
                         maxDate={this.props.maxDate}
                         onChange={this.handleDatePicked}
