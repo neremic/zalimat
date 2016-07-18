@@ -17,7 +17,7 @@ class GlobalBrush extends React.Component {
         const { startDate, endDate } = props.viewPortDateRange;
         this.state = {
             startDate,
-            extent: [startDate, endDate]
+            endDate
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -30,10 +30,10 @@ class GlobalBrush extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         const {startDate, endDate} = nextProps.viewPortDateRange;
-        if (this.state.startDate != startDate) {
+        if (this.state.startDate != startDate || this.state.endDate != endDate) {
             const newState = {
                 startDate,
-                extent: [startDate, endDate]
+                endDate
             };
             this.setState(newState);
         }
@@ -50,7 +50,7 @@ class GlobalBrush extends React.Component {
                         height = {this.props.height}
                         margin = {BRUSH_MARGIN}
                         xScale = {d3.time.scale().domain([startDate, endDate]).range([0, this.props.containerWidth - BRUSH_HORIZONTAL_MARGIN])}
-                        extent = {this.state.extent}
+                        extent = {[startDate, endDate]}
                         onChange = {this.handleChange}
                     />
                 </div>

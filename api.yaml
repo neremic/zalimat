@@ -21,45 +21,259 @@ security:
   - oauth2: [uid]
 
 paths:
-  '/lifecycle/{application_id}/versions/{version_id}/instance_histories':
+  '/lifecycle/events/apps/{application_id}/versions':
     get:
-      summary: read instance history of a version of an application
+      summary: read event history of all versions of an application
       description: |
-        Returns a list of dates and instance count for the specified application and its version. The list might be narrowed down by specifing a start date and/or end date
+        Returns an object containing a list of dates and event names for the specified application and its versions. 	The list might be narrowed down by specifing a start date, end date, and filter for getting only certain events.	If filter is no present than all events will be returned.	Furthermore the sort order of the list can be specified through the sort parameter
       tags:
-        - Versions
-      operationId: 'org.zalando.stups.kio.api/read-version-history-by-version-by-application'
+        - lifecycle-events
+      operationId: 'org.zalando.stups.yourturn.api/read-lifecycle-events-by-application'
       parameters:
         - $ref: '#/parameters/ApplicationID'
-        - $ref: '#/parameters/VersionID'
         - name: start_date
           in: query
-          description: parm1 # 💩
+          description: date specifying to only return events that occured past (inclusive) that date.
           required: false
           type: string
           format: date-time
           allowEmptyValue: false
         - name: end_date
           in: query
-          description: parm1 # 💩
+          description: date specifying to only return events that occured before (inclusive) that date.
+          required: false
+          type: string
+          format: date-time
+          allowEmptyValue: false
+        - name: eventnames
+          in: query
+          description: coma separated list of event names so that only events excatly matching one of theese names is returned
+          required: false
+          type: string
+          format: string
+          allowEmptyValue: false
+        - name: sort
+          in: query
+          description: specifying the sorting on event names or change date when an event occured
+          required: false
+          type: string
+          format: string
+          allowEmptyValue: false
+      responses:
+        200:
+          description: Returns an object with application and version ID and a an array of requested data
+          schema:
+            type: object
+            properties:
+              application_id:
+                type: string
+                description: Unique identifier of the application
+                example: kio
+              version_id:
+                type: string
+                description: Unique identifier of the version
+                example: somestring
+              data:
+                type: array
+                items:
+                   type: object
+                   properties:
+                     change_date:
+                       type: string
+                       format: date-time
+                       description: Point in time when the instance count of the version changed.
+                       example: '2015-04-25T16:25:00.000Z'
+                     event_name:
+                       type: string
+                       description: name of the occured event
+                       example: 'someEventThatHappened'
+
+        404:
+          description: Not found e.g. no valid application ID or version ID or both
+        default:
+          $ref: '#/responses/Error'
+
+  '/lifecycle/events/apps/{application_id}/versions/{version_id}':
+    get:
+      summary: read event history of a version of an application
+      description: |
+        Returns an object containing a list of dates and event names for the specified application and version. 	The list might be narrowed down by specifing a start date, end date, and filter for getting only certain events.	If filter is no present than all events will be returned.	Furthermore the sort order of the list can be specified through the sort parameter
+      tags:
+        - lifecycle-events
+      operationId: 'org.zalando.stups.yourturn.api/read-lifecycle-events-by-application-by-version'
+      parameters:
+        - $ref: '#/parameters/ApplicationID'
+        - $ref: '#/parameters/VersionID'
+        - name: start_date
+          in: query
+          description: date specifying to only return events that occured past (inclusive) that date.
+          required: false
+          type: string
+          format: date-time
+          allowEmptyValue: false
+        - name: end_date
+          in: query
+          description: date specifying to only return events that occured before (inclusive) that date.
+          required: false
+          type: string
+          format: date-time
+          allowEmptyValue: false
+        - name: eventnames
+          in: query
+          description: coma separated list of event names so that only events excatly matching one of theese names is returned
+          required: false
+          type: string
+          format: string
+          allowEmptyValue: false
+        - name: sort
+          in: query
+          description: specifying the sorting on event names or change date when an event occured
+          required: false
+          type: string
+          format: string
+          allowEmptyValue: false
+      responses:
+        200:
+          description: Returns an object with application and version ID and a an array of requested data
+          schema:
+            type: object
+            properties:
+              application_id:
+                type: string
+                description: Unique identifier of the application
+                example: kio
+              versions:
+                type: array
+                items:
+                   type: object
+                   properties:
+                     version_id:
+                       type: string
+                       description: Unique identifier of the version
+                       example: somestring
+                     data:
+                       type: array
+                       items:
+                         type: object
+                         properties:
+                           change_date:
+                           type: string
+                           format: date-time
+                           description: Point in time when the instance count of the version changed.
+                           example: '2015-04-25T16:25:00.000Z'
+                         event_name:
+                           type: string
+                           description: name of the occured event
+                           example: 'someEventThatHappened'
+
+        404:
+          description: Not found e.g. no valid application ID or version ID or both
+        default:
+          $ref: '#/responses/Error'
+
+  '/lifecycle/life_change_events/apps/{application_id}/versions':
+    get:
+      summary: read event history for change of instance coung of all versions of an application
+      description: |
+        Returns an object containing a sorted by date list of dates and instance count for the specified application and its versions. 	The list might be narrowed down by specifing a start date and end date.
+      tags:
+        - lifecycle-life-change-events
+      operationId: 'org.zalando.stups.yourturn.api/read-life-change-events-by-application'
+      parameters:
+        - $ref: '#/parameters/ApplicationID'
+        - name: start_date
+          in: query
+          description: date specifying to only return events that occured past (inclusive) that date.
+          required: false
+          type: string
+          format: date-time
+          allowEmptyValue: false
+        - name: end_date
+          in: query
+          description: date specifying to only return events that occured before (inclusive) that date.
           required: false
           type: string
           format: date-time
           allowEmptyValue: false
       responses:
         200:
-          description: Returns detailed information
+          description: Returns an object with application and version ID and a an array of requested data
           schema:
             type: object
             properties:
-              id:
-                type: string
-                description: Unique identifier of the version
-                example: 1.0
               application_id:
                 type: string
-                description: ID of the version's application
+                description: Unique identifier of the application
                 example: kio
+              versions:
+                type: array
+                items:
+                   type: object
+                   properties:
+                     version_id:
+                       type: string
+                       description: Unique identifier of the version
+                       example: somestring
+                     data:
+                       type: array
+                       items:
+                         type: object
+                         properties:
+                           change_date:
+                             type: string
+                             format: date-time
+                             description: Point in time when the instance count of the version changed.
+                             example: '2015-04-25T16:25:00.000Z'
+                           instance_count:
+                             type: integer
+                             format: int32
+                             description: amount of instances at the gi
+                             example: 4
+
+        404:
+          description: Not found e.g. no valid application ID or version ID or both
+        default:
+          $ref: '#/responses/Error'
+
+    '/lifecycle/life_change_events/apps/{application_id}/versions/{version_id}':
+    get:
+      summary: read event history for change of instance coung of a version of an application
+      description: |
+        Returns an object containing a sorted by date list of dates and instance count for the specified application and its versions. 	The list might be narrowed down by specifing a start date and end date.
+      tags:
+        - lifecycle-life-change-events
+      operationId: 'org.zalando.stups.yourturn.api/read-life-change-events-by-application-by-version'
+      parameters:
+        - $ref: '#/parameters/ApplicationID'
+        - $ref: '#/parameters/VersionID'
+        - name: start_date
+          in: query
+          description: date specifying to only return events that occured past (inclusive) that date.
+          required: false
+          type: string
+          format: date-time
+          allowEmptyValue: false
+        - name: end_date
+          in: query
+          description: date specifying to only return events that occured before (inclusive) that date.
+          required: false
+          type: string
+          format: date-time
+          allowEmptyValue: false
+      responses:
+        200:
+          description: Returns an object with application and version ID and an array of requested data
+          schema:
+            type: object
+            properties:
+              application_id:
+                type: string
+                description: Unique identifier of the application
+                example: kio
+              version_id:
+                type: string
+                description: Unique identifier of the version
+                example: somestring
               data:
                 type: array
                 items:

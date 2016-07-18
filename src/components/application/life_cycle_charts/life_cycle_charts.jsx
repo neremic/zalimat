@@ -9,15 +9,14 @@ import * as versionHistoryActions from '../../../actions/applicationHistoryActio
 
 import moment from 'moment';
 
-import {Test} from '../../Test';
-import DimensionTest from '../../DimensionTest';
 import Charts from '../../Charts';
 import GlobalBrush from '../../GlobalBrush';
 import VersionSelector from '../../VersionSelector'
-import DateSelector from '../../DateSelector'
+import DateSelector2 from '../../DateSelector2'
 
 import 'react-widgets/lib/less/react-widgets.less'
 import '../../../styles/react-datetime.css'
+import 'react-date-picker/index.css'
 
 const BRUSH_HEIGHT = 50;
 const CHART_HEIGHT = 200;
@@ -32,11 +31,11 @@ class LifeCycleCharts extends React.Component {
             versionToBeRemoved : undefined,
             versions : [],
             selectedVerions : [],
-            viewPortDateRange : {
+            zoomedViewPortDateRange : {
                 startDate : moment().subtract(1, "days").startOf('day').toDate(),
-                endDate : moment().endOf('day').toDate()
+                endDate : moment().startOf('day').toDate()
             },
-            brushViewPortDateRange : {
+            totalViewPortDateRange : {
                 startDate : moment().subtract(1, "days").startOf('day').toDate(),
                 endDate : moment().endOf('day').toDate()
             }
@@ -51,7 +50,7 @@ class LifeCycleCharts extends React.Component {
 
     handleBrushChanged(start, end) {
         this.setState({
-            viewPortDateRange : {
+            zoomedViewPortDateRange : {
                 startDate : start,
                 endDate : end
             }
@@ -63,8 +62,8 @@ class LifeCycleCharts extends React.Component {
         this.loadVersionHistory(
             this.state.applicationId,
             addedVersions,
-            this.state.viewPortDateRange.startDate,
-            this.state.viewPortDateRange.endDate
+            this.state.zoomedViewPortDateRange.startDate,
+            this.state.zoomedViewPortDateRange.endDate
         );
         this.setState({ selectedVerions : selectedOptions });
     }
@@ -100,11 +99,11 @@ class LifeCycleCharts extends React.Component {
         );
 
         this.setState({
-            viewPortDateRange : {
+            zoomedViewPortDateRange : {
                 startDate : startDate,
                 endDate : endDate
             },
-            brushViewPortDateRange : {
+            totalViewPortDateRange : {
                 startDate : startDate,
                 endDate : endDate
             }
@@ -112,15 +111,15 @@ class LifeCycleCharts extends React.Component {
     }
 
     handleStartDatePicked(date) {
-        this.handleDateChanged(date, this.state.viewPortDateRange.endDate);
+        this.handleDateChanged(moment(date).startOf('day').toDate(), this.state.totalViewPortDateRange.endDate);
     }
 
     handleEndDatePicked(date) {
-        this.handleDateChanged(this.state.viewPortDateRange.startDate, date);
+        this.handleDateChanged(this.state.totalViewPortDateRange.startDate, moment(date).endOf('day').toDate());
     }
 
     render() {
-        const {startDate, endDate} = this.state.viewPortDateRange;
+        const {startDate, endDate} = this.state.zoomedViewPortDateRange;
         return (
             <div style={{padding: "40px"}}>
                 <div style={{display: "flex"}}>
@@ -134,29 +133,37 @@ class LifeCycleCharts extends React.Component {
                 <hr />
                 <div style={{display: "flex", justifyContent: "space-between"}}>
                     <h3>
-                        {moment(this.state.viewPortDateRange.startDate).format(DATE_FORMAT)}
+                        {moment(this.state.totalViewPortDateRange.startDate).format(DATE_FORMAT)}
                     </h3>
                     <h3>
-                        {moment(this.state.viewPortDateRange.endDate).format(DATE_FORMAT)}
+                        {moment(this.state.totalViewPortDateRange.endDate).format(DATE_FORMAT)}
                     </h3>
                 </div>
                 <div style={{display: "flex", justifyContent: "flex-center"}}>
-                    <DateSelector
+                    <DateSelector2
                         datePicked = {this.handleStartDatePicked}
                         title = 'Select Start Date'
+                        defaultValue = {this.state.totalViewPortDateRange.startDate}
+                        maxDate = {this.state.totalViewPortDateRange.endDate}
                     />
                     <div style = {{flex: "auto"}}>
                         <GlobalBrush
                             show = {true}
                             onBrushChange = {this.handleBrushChanged}
-                            viewPortDateRange = {this.state.brushViewPortDateRange}
+                            viewPortDateRange = {this.state.totalViewPortDateRange}
                             height = {BRUSH_HEIGHT}
                         />
                     </div>
-                    <DateSelector
-                        datePicked = {this.handleEndDatePicked}
-                        title = 'Select End Date'
-                    />
+                    <div style={{width: '100px'}}>
+                        <DateSelector2
+                            datePicked = {this.handleEndDatePicked}
+                            title = 'Select Start Date'
+                            align = 'right'
+                            defaultValue = {this.state.totalViewPortDateRange.endDate}
+                            minDate = {this.state.totalViewPortDateRange.startDate}
+                            maxDate = {moment().endOf('day').toDate()}
+                        />
+                    </div>
                 </div>
                 <hr />
                 <div style={{display: "flex", justifyContent: "flex-center"}}>
@@ -165,7 +172,7 @@ class LifeCycleCharts extends React.Component {
                             selectedVersions = {this.state.selectedVerions}
                             onDelete = {this.handleVersionRemoved}
                             dataSets = {this.props.versionsHistory}
-                            viewPortDateRange = {this.state.viewPortDateRange}
+                            viewPortDateRange = {this.state.zoomedViewPortDateRange}
                             applicationId = {this.state.applicationId}
                             height = {CHART_HEIGHT}
                         />
