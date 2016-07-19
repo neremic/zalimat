@@ -1,10 +1,12 @@
 "use strict";
 
 import React from 'react'
-
 import Multiselect from 'react-widgets/lib/Multiselect'
-
 import Button from 'react-bootstrap/lib/Button';
+
+const OUTER_STYLE = {display: 'flex'};
+const SELECTOR_DIV_STYLE = {minWidth: '200px'};
+const BUTTON_STYLE = {marginLeft: '10px'};
 
 class VersionSelector extends React.Component {
     constructor(props) {
@@ -13,7 +15,7 @@ class VersionSelector extends React.Component {
         this.state = {
             values: [],
             lastRemovedVersion: undefined
-        }
+        };
 
         this.handleSelect = this.handleSelect.bind(this);
         this.handleReset = this.handleReset.bind(this);
@@ -31,7 +33,7 @@ class VersionSelector extends React.Component {
     componentWillReceiveProps(nextProps) {
         let rVersion = nextProps.removeVersion;
         if (rVersion !== undefined && rVersion !== this.state.lastRemovedVersion) {
-            let newValues = this.state.values.filter((v) => {
+            const newValues = this.state.values.filter((v) => {
                 return v.value != rVersion
             });
             this.setState({
@@ -45,21 +47,22 @@ class VersionSelector extends React.Component {
         return (
             <div>
                 <h3>Select versions</h3>
-                <div style = {{display: "flex"}}>
-                    <div style = {{minWidth: "200px"}}>
+                <div style = {OUTER_STYLE}>
+                    <div style = {SELECTOR_DIV_STYLE}>
                         <Multiselect
                             valueField = 'value'
-                            textField = 'text'
-                            value = {this.state.values}
-                            data = {this.props.versions}
-                            onChange = {this.handleSelect}
-                            busy = {this.props.isLoading}
-                            disabled = {this.props.isLoading}
+                            textField  = 'text'
+                            value      = {this.state.values}
+                            data       = {this.props.versions}
+                            onChange   = {this.handleSelect}
+                            busy       = {this.props.isLoading}
+                            disabled   = {this.props.isLoading}
                         />
                     </div>
                     <Button
-                        style = {{marginLeft: "10px"}}
-                        bsStyle = "primary" bsSize="xsmall"
+                        style   = {BUTTON_STYLE}
+                        bsStyle = 'primary'
+                        bsSize  = 'xsmall'
                         onClick = {this.handleReset}>
                         Reset
                     </Button>

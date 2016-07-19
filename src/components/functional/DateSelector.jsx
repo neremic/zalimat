@@ -2,9 +2,8 @@
 
 import React from 'react'
 
-import moment from 'moment';
-
 import Button from 'react-bootstrap/lib/Button';
+import Hideable from '../hoc/Hideable';
 
 import 'react-date-picker/index.css'
 import { Calendar } from 'react-date-picker'
@@ -13,7 +12,7 @@ const STYLE_LEFT = {width: "1px", height: "1px", position: "relative", top: 0, l
 const STYLE_RIGHT = {width: "1px", height: "1px", position: "relative", top: 0, left: -220, zIndex: 10};
 const DATE_FORMAT = "YYYY-MM-DD";
 
-class DateSelector2 extends React.Component {
+class DateSelector extends React.Component {
     constructor(props) {
         super(props);
 
@@ -39,15 +38,15 @@ class DateSelector2 extends React.Component {
             dateFieldComponent =
                 <div style = {this.props.align == "right" ? STYLE_RIGHT : STYLE_LEFT}>
                     <Calendar
-                        updateOnDateClick = {true}
+                        updateOnDateClick   = {true}
                         collapseOnDateClick = {true}
-                        footer = {false}
-                        forceValidDate = {true}
-                        dateFormat={DATE_FORMAT}
-                        minDate={this.props.minDate}
-                        maxDate={this.props.maxDate}
-                        onChange={this.handleDatePicked}
-                        date={this.props.defaultValue}
+                        footer              = {false}
+                        forceValidDate      = {true}
+                        dateFormat          = {DATE_FORMAT}
+                        minDate             = {this.props.minDate}
+                        maxDate             = {this.props.maxDate}
+                        onChange            = {this.handleDatePicked}
+                        date                = {this.props.defaultValue}
                     />
                 </div>
         }
@@ -66,7 +65,7 @@ class DateSelector2 extends React.Component {
 }
 
 
-DateSelector2.propTypes = {
+DateSelector.propTypes = {
     title: React.PropTypes.string,
     datePicked: React.PropTypes.func.isRequired,
     align: React.PropTypes.string,
@@ -75,4 +74,9 @@ DateSelector2.propTypes = {
     defaultValue: React.PropTypes.instanceOf(Date)
 };
 
-export default DateSelector2;
+const hideableDateSelector = Hideable(DateSelector);
+
+export {
+    DateSelector as default,
+    hideableDateSelector as HideableDateSelector
+};
