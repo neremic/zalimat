@@ -145,26 +145,26 @@ paths:
               versions:
                 type: array
                 items:
-                   type: object
-                   properties:
-                     version_id:
-                       type: string
-                       description: Unique identifier of the version
-                       example: somestring
-                     data:
-                       type: array
-                       items:
-                         type: object
-                         properties:
-                           change_date:
-                           type: string
-                           format: date-time
-                           description: Point in time when the instance count of the version changed.
-                           example: '2015-04-25T16:25:00.000Z'
-                         event_name:
-                           type: string
-                           description: name of the occured event
-                           example: 'someEventThatHappened'
+                  type: object
+                  properties:
+                    version_id:
+                      type: string
+                      description: Unique identifier of the version
+                      example: somestring
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          change_date:
+                            type: string
+                            format: date-time
+                            description: Point in time when the instance count of the version changed.
+                            example: '2015-04-25T16:25:00.000Z'
+                          event_name:
+                            type: string
+                            description: name of the occured event
+                            example: 'someEventThatHappened'
 
         404:
           description: Not found e.g. no valid application ID or version ID or both
