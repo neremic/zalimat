@@ -1,5 +1,6 @@
 swagger: '2.0'
 
+# dummy comment
 # basic meta information
 info:
   title: Application Lifecycle ManangementAPI
