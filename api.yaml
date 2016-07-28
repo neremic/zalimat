@@ -2,9 +2,9 @@ swagger: '2.0'
 
 # basic meta information
 info:
-  title: Application Lifecycle ManangementAPI
+  title: Application Lifecycle Manangement API
   version: '0.2'
-  description: STUPS' Application Lifecycle ManangementAPI registry.
+  description: STUPS' Application Lifecycle Manangement API registry.
 
 externalDocs:
   description: STUPS overview
@@ -14,6 +14,7 @@ externalDocs:
 basePath: /
 produces:
 - application/json
+- application/problem+json
 consumes:
 - application/json
 
@@ -21,309 +22,88 @@ security:
   - oauth2: [uid]
 
 paths:
-  '/lifecycle/events/apps/{application_id}/versions':
+
+  '/servercount/{application_id}':
     get:
-      summary: read event history of all versions of an application
+      summary: read data containing amount of running instances of an application at a certain point in time
       description: |
-        Returns an object containing a list of dates and event names for the specified application and its versions. 	The list might be narrowed down by specifing a start date, end date, and filter for getting only certain events.	If filter is no present than all events will be returned.	Furthermore the sort order of the list can be specified through the sort parameter
+        TBD
       tags:
         - lifecycle-events
-      operationId: 'org.zalando.stups.yourturn.api/read-lifecycle-events-by-application'
+      operationId: 'org.zalando.stups.yourturn.api/read-servercount-by-application'
       parameters:
         - $ref: '#/parameters/ApplicationID'
-        - name: start_date
-          in: query
-          description: date specifying to only return events that occured past (inclusive) that date.
-          required: false
-          type: string
-          format: date-time
-          allowEmptyValue: false
-        - name: end_date
-          in: query
-          description: date specifying to only return events that occured before (inclusive) that date.
-          required: false
-          type: string
-          format: date-time
-          allowEmptyValue: false
-        - name: eventnames
-          in: query
-          description: coma separated list of event names so that only events excatly matching one of theese names is returned
-          required: false
-          type: string
-          format: string
-          allowEmptyValue: false
-        - name: sort
-          in: query
-          description: specifying the sorting on event names or change date when an event occured
-          required: false
-          type: string
-          format: string
-          allowEmptyValue: false
+        - $ref: '#/parameters/StartDate'
+        - $ref: '#/parameters/EndDate'
       responses:
         200:
-          description: Returns an object with application and version ID and a an array of requested data
+          description: Returns an array of objects per version of the requested application with amount running instances in a certain point of time
           schema:
-            type: object
-            properties:
-              application_id:
-                type: string
-                description: Unique identifier of the application
-                example: kio
-              versions:
-                type: array
-                items:
+            type: array
+            items:
+              type: object
+              properties:
+                version_id:
+                  type: string
+                  description: some version id
+                metadata:
                   type: object
-                  properties:
-                    version_id:
-                      type: string
-                      description: Unique identifier of the version
-                      example: 'somestring'
-                    data:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          event_date:
-                            type: string
-                            format: date-time
-                            description: Point in time when the event occured.
-                            example: '2015-04-25T16:25:00.000Z'
-                          event_name:
-                            type: string
-                            description: source of event, e.g. aws account + service, to account for GCP in the future
-                            example: 'ec2.amazonaws.com'
-                          source:
-                            type: string
-                            description: name of the occured event
-                            example: 'someEventThatHappened'
-                          resource:
-                            type: object
-                            properties:
-                              instance_id:
-                                type: string
-                                description: e.g. instance id for RunInstances
-                                example: 'i-65dd1ce9'
-                              image_id:
-                                type: string
-                                description: e.g. image id for RunInstances
-                                example: 'ami-e0860293'
+                  description: some additional metadata
+                events:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      timestamp:
+                        $ref: '#/definitions/Timestamp'
+                      count:
+                        type: integer
+                        format: int32
+                        description: amount of instances at the given change_date
+                        example: 4
+                      resources:
+                        type: array
+                        items:
+                          $ref: '#/definitions/Resource'
 
-        404:
-          description: Not found e.g. no valid application ID or version ID or both
+
         default:
           $ref: '#/responses/Error'
 
-  '/lifecycle/events/apps/{application_id}/versions/{version_id}':
+  '/events/{application_id}':
     get:
-      summary: read event history of a version of an application
+      summary: read events for an application
       description: |
-        Returns an object containing a list of dates and event names for the specified application and version. 	The list might be narrowed down by specifing a start date, end date, and filter for getting only certain events.	If filter is no present than all events will be returned.	Furthermore the sort order of the list can be specified through the sort parameter
+        Returns an array of object per version with an array of event data
       tags:
         - lifecycle-events
-      operationId: 'org.zalando.stups.yourturn.api/read-lifecycle-events-by-application-by-version'
+      operationId: 'org.zalando.stups.yourturn.api/read-events-by-application'
       parameters:
         - $ref: '#/parameters/ApplicationID'
-        - $ref: '#/parameters/VersionID'
-        - name: start_date
-          in: query
-          description: date specifying to only return events that occured past (inclusive) that date.
-          required: false
-          type: string
-          format: date-time
-          allowEmptyValue: false
-        - name: end_date
-          in: query
-          description: date specifying to only return events that occured before (inclusive) that date.
-          required: false
-          type: string
-          format: date-time
-          allowEmptyValue: false
-        - name: eventnames
-          in: query
-          description: coma separated list of event names so that only events excatly matching one of theese names is returned
-          required: false
-          type: string
-          format: string
-          allowEmptyValue: false
-        - name: sort
-          in: query
-          description: specifying the sorting on event names or change date when an event occured
-          required: false
-          type: string
-          format: string
-          allowEmptyValue: false
+        - $ref: '#/parameters/StartDate'
+        - $ref: '#/parameters/EndDate'
       responses:
         200:
-          description: Returns an object with application and version ID and a an array of requested data
+          description: Returns an array of object per version with an array of event data
           schema:
-            type: object
-            properties:
-              application_id:
-                type: string
-                description: Unique identifier of the application
-                example: kio
-              version_id:
-                type: string
-                description: Unique identifier of the version
-                example: somestring
-              data:
-                type: array
-                items:
-                   type: object
-                   properties:
-                     event_date:
-                       type: string
-                       format: date-time
-                       description: Point in time when the event occured.
-                       example: '2015-04-25T16:25:00.000Z'
-                     event_name:
-                       type: string
-                       description: source of event, e.g. aws account + service, to account for GCP in the future
-                       example: 'ec2.amazonaws.com'
-                     source:
-                       type: string
-                       description: name of the occured event
-                       example: 'someEventThatHappened'
-                     resource:
-                       type: object
-                       properties:
-                         instance_id:
-                           type: string
-                           description: e.g. instance id for RunInstances
-                           example: 'i-65dd1ce9'
-                         image_id:
-                           type: string
-                           description: e.g. image id for RunInstances
-                           example: 'ami-e0860293'
-
-        404:
-          description: Not found e.g. no valid application ID or version ID or both
-        default:
-          $ref: '#/responses/Error'
-
-  '/lifecycle/life-change-events/apps/{application_id}/versions':
-    get:
-      summary: read event history for change of instance coung of all versions of an application
-      description: |
-        Returns an object containing a sorted by date list of dates and instance count for the specified application and its versions. 	The list might be narrowed down by specifing a start date and end date.
-      tags:
-        - lifecycle-life-change-events
-      operationId: 'org.zalando.stups.yourturn.api/read-life-change-events-by-application'
-      parameters:
-        - $ref: '#/parameters/ApplicationID'
-        - name: start_date
-          in: query
-          description: date specifying to only return events that occured past (inclusive) that date.
-          required: false
-          type: string
-          format: date-time
-          allowEmptyValue: false
-        - name: end_date
-          in: query
-          description: date specifying to only return events that occured before (inclusive) that date.
-          required: false
-          type: string
-          format: date-time
-          allowEmptyValue: false
-      responses:
-        200:
-          description: Returns an object with application and version ID and a an array of requested data
-          schema:
-            type: object
-            properties:
-              application_id:
-                type: string
-                description: Unique identifier of the application
-                example: kio
-              versions:
-                type: array
-                items:
-                   type: object
-                   properties:
-                     version_id:
-                       type: string
-                       description: Unique identifier of the version
-                       example: somestring
-                     data:
-                       type: array
-                       items:
-                         type: object
-                         properties:
-                           change_date:
-                             type: string
-                             format: date-time
-                             description: Point in time when the instance count of the version changed.
-                             example: '2015-04-25T16:25:00.000Z'
-                           instance_count:
-                             type: integer
-                             format: int32
-                             description: amount of instances at the given change_date
-                             example: 4
-
-        404:
-          description: Not found e.g. no valid application ID or version ID or both
-        default:
-          $ref: '#/responses/Error'
-
-  '/lifecycle/life-change-events/apps/{application_id}/versions/{version_id}':
-    get:
-      summary: read event history for change of instance coung of a version of an application
-      description: |
-        Returns an object containing a sorted by date list of dates and instance count for the specified application and its versions. 	The list might be narrowed down by specifing a start date and end date.
-      tags:
-        - lifecycle-life-change-events
-      operationId: 'org.zalando.stups.yourturn.api/read-life-change-events-by-application-by-version'
-      parameters:
-        - $ref: '#/parameters/ApplicationID'
-        - $ref: '#/parameters/VersionID'
-        - name: start_date
-          in: query
-          description: date specifying to only return events that occured past (inclusive) that date.
-          required: false
-          type: string
-          format: date-time
-          allowEmptyValue: false
-        - name: end_date
-          in: query
-          description: date specifying to only return events that occured before (inclusive) that date.
-          required: false
-          type: string
-          format: date-time
-          allowEmptyValue: false
-      responses:
-        200:
-          description: Returns an object with application and version ID and an array of requested data
-          schema:
-            type: object
-            properties:
-              application_id:
-                type: string
-                description: Unique identifier of the application
-                example: kio
-              version_id:
-                type: string
-                description: Unique identifier of the version
-                example: somestring
-              data:
-                type: array
-                items:
+            type: array
+            items:
+              type: object
+              properties:
+                version_id:
+                  type: string
+                  description: some version id
+                metadata:
                   type: object
-                  properties:
-                    change_date:
-                      type: string
-                      format: date-time
-                      description: Point in time when the instance count of the version changed.
-                      example: '2015-04-25T16:25:00.000Z'
-                    instance_count:
-                      type: integer
-                      format: int32
-                      description: amount of instances at the given change_date
-                      example: 4
+                  description: some additional metadata
+                events:
+                  type: array
+                  items:
+                    $ref: '#/definitions/Event'
 
-        404:
-          description: Not found e.g. no valid application ID or version ID or both
         default:
           $ref: '#/responses/Error'
+
 
 # definitions
 
@@ -334,30 +114,92 @@ parameters:
     type: string
     description: ID of the application
     required: true
-    pattern: "^[a-z][a-z0-9-]*[a-z0-9]$"
-    #example: kio
 
-  VersionID:
-    name: version_id
-    in: path
+  StartDate:
+    name: from
+    in: query
+    description: date specifying to only return events that occured past (inclusive) that date.
+    required: false
     type: string
-    description: ID of the version
-    required: true
-    pattern: "^[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?$"
-    #example: "1.0"
+    format: date-time
+    allowEmptyValue: false
+
+  EndDate:
+    name: to
+    in: query
+    description: date specifying to only return events that occured before (inclusive) that date.
+    required: false
+    type: string
+    format: date-time
+    allowEmptyValue: false
 
 responses:
   Error:
     description: An error occured.
     schema:
-      $ref: '#/definitions/Error'
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+          description: |
+            An absolute URI that identifies the problem type.
+          example: http://httpstatus.es/503
+          x-nullable: false
+        title:
+          type: string
+          description: |
+            A short, summary of the problem type
+          example: Service Unavailable
+          x-nullable: false
+        status:
+          type: integer
+          format: int32
+          description: |
+            The HTTP status code generated by the origin server for this occurrence
+            of the problem.
+          example: 503
+        detail:
+          type: string
+          description: |
+            A human readable explanation specific to this occurrence of the
+            problem.
+        instance:
+          type: string
+          format: uri
+          description: |
+            An absolute URI that identifies the specific occurrence of the problem.
 
 definitions:
-  Error:
+
+  Timestamp:
+    type: string
+    format: date-time
+    description: Point in time when the event occured.
+    example: '2015-04-25T16:25:00.000Z'
+
+  Resource:
     type: object
     properties:
-      message:
+      instance_id:
         type: string
+        description: e.g. instance id for RunInstances
+        example: 'i-65dd1ce9'
+      image_id:
+        type: string
+        description: e.g. image id for RunInstances
+        example: 'ami-e0860293'
+
+  Event:
+    type: object
+    properties:
+      event_type:
+        type: string
+        enum: [ 'eventtype1', 'eventtype2']
+      timestamp:
+        $ref: '#/definitions/Timestamp'
+      payload:
+        type: object
 
 securityDefinitions:
   oauth2:
