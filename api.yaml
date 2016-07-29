@@ -48,7 +48,23 @@ paths:
                   description: some version id
                 metadata:
                   type: object
-                  description: some additional metadata
+                  properties:
+                    scm_source:
+                      type: object
+                      properties:
+                        repo_url:
+                          type: string
+                        git_hash:
+                          type: string
+                        commiter:
+                          type: string
+                    docker_source:
+                      type: string
+                    pull_request:
+                      type: object
+                      properties:
+                        link:
+                          type: string
                 events:
                   type: array
                   items:
@@ -61,49 +77,19 @@ paths:
                         format: int32
                         description: amount of instances at the given change_date
                         example: 4
-                      resources:
+                      instances:
                         type: array
                         items:
-                          $ref: '#/definitions/Resource'
-
-
-        default:
-          $ref: '#/responses/Error'
-
-  '/events/{application_id}':
-    get:
-      summary: read events for an application
-      description: |
-        Returns an array of object per version with an array of event data
-      tags:
-        - lifecycle-events
-      operationId: 'org.zalando.stups.yourturn.api/read-events-by-application'
-      parameters:
-        - $ref: '#/parameters/ApplicationID'
-        - $ref: '#/parameters/StartDate'
-        - $ref: '#/parameters/EndDate'
-      responses:
-        200:
-          description: Returns an array of object per version with an array of event data
-          schema:
-            type: array
-            items:
-              type: object
-              properties:
-                version_id:
-                  type: string
-                  description: some version id
-                metadata:
-                  type: object
-                  description: some additional metadata
-                events:
-                  type: array
-                  items:
-                    $ref: '#/definitions/Event'
+                          type: object
+                          properties:
+                            event_type:
+                              type: string
+                              enum: [ 'scaledUp', 'scaledDown']
+                            instance_id:
+                              type: string
 
         default:
           $ref: '#/responses/Error'
-
 
 # definitions
 
@@ -177,29 +163,6 @@ definitions:
     format: date-time
     description: Point in time when the event occured.
     example: '2015-04-25T16:25:00.000Z'
-
-  Resource:
-    type: object
-    properties:
-      instance_id:
-        type: string
-        description: e.g. instance id for RunInstances
-        example: 'i-65dd1ce9'
-      image_id:
-        type: string
-        description: e.g. image id for RunInstances
-        example: 'ami-e0860293'
-
-  Event:
-    type: object
-    properties:
-      event_type:
-        type: string
-        enum: [ 'eventtype1', 'eventtype2']
-      timestamp:
-        $ref: '#/definitions/Timestamp'
-      payload:
-        type: object
 
 securityDefinitions:
   oauth2:
