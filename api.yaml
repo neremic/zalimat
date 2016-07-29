@@ -2,9 +2,9 @@ swagger: '2.0'
 
 # basic meta information
 info:
-  title: Application Lifecycle Manangement API
+  title: Application Lifecycle API
   version: '0.2'
-  description: STUPS' Application Lifecycle Manangement API registry.
+  description: STUPS' Application Lifecycle API registry.
 
 externalDocs:
   description: STUPS overview
