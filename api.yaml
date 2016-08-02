@@ -23,7 +23,7 @@ security:
 
 paths:
 
-  '/servercount/{application_id}':
+  '/instance-count/{application_id}':
     get:
       summary: read data containing amount of running instances of an application at a certain point in time
       description: |
@@ -56,7 +56,7 @@ paths:
                           type: string
                         git_hash:
                           type: string
-                        commiter:
+                        committer:
                           type: string
                     docker_source:
                       type: string
@@ -84,9 +84,14 @@ paths:
                           properties:
                             event_type:
                               type: string
-                              enum: [ 'scaledUp', 'scaledDown']
-                            instance_id:
-                              type: string
+                              enum: ['scaledUp', 'scaledDown']
+                        example: {
+                           event_type: 'scaledUp',
+                           account_type: "aws",
+                           account_id: "123456789012",
+                           region: "eu-west-1",
+                           instance_id: "i-123456"
+                        }
 
         default:
           $ref: '#/responses/Error'
